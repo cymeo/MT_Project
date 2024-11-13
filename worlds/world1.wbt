@@ -1,0 +1,932 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/solids/protos/SolidBox.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.18499598572956275 0.8278658015802063 -0.5295419717434212 0.6709050216090632
+  position -2.1271686396764435 1.7334305388464615 1.681364314631595
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  translation 0 0 -1.41
+  floorSize 5 5
+}
+DEF Robot Robot {
+  children [
+    Pose {
+      translation -0.0467 0.047 0.0252
+      rotation 1 0 0 -3.1415923071795864
+      children [
+        DEF SCREW Group {
+          children [
+            Transform {
+              scale 1.1 1.1 1.1
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColorMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/old_steel/old_steel_base_color.jpg"
+                      ]
+                    }
+                    roughnessMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/old_steel/old_steel_roughness.jpg"
+                      ]
+                    }
+                    metalnessMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/old_steel/old_steel_metalness.jpg"
+                      ]
+                    }
+                    normalMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/old_steel/old_steel_normal.jpg"
+                      ]
+                    }
+                  }
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/screw.obj"
+                    ]
+                  }
+                }
+              ]
+            }
+            DEF CYLINDER Pose {
+              translation 0 0 0.02
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColorMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/screw_thread/screw_thread_base_color.jpg"
+                      ]
+                    }
+                    roughnessMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/screw_thread/screw_thread_roughness.jpg"
+                      ]
+                    }
+                    normalMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/screw_thread/screw_thread_normal.jpg"
+                      ]
+                    }
+                    occlusionMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/textures/screw_thread/screw_thread_occlusion.jpg"
+                      ]
+                    }
+                    textureTransform TextureTransform {
+                      rotation 1.5708
+                      scale 1.6 2
+                    }
+                  }
+                  geometry Cylinder {
+                    height 0.04
+                    radius 0.0044
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+    Pose {
+      translation -0.0467 -0.047 0.0252
+      rotation 1 0 0 -3.1415923071795864
+      children [
+        USE SCREW
+      ]
+    }
+    Pose {
+      translation 0.0464 -0.047 0.0252
+      rotation 1 0 0 -3.1415923071795864
+      children [
+        USE SCREW
+      ]
+    }
+    Pose {
+      translation 0.0464 0.047 0.0252
+      rotation 1 0 0 -3.1415923071795864
+      children [
+        USE SCREW
+      ]
+    }
+    Shape {
+      appearance DEF METAL_APPEARANCE PBRAppearance {
+        baseColor 0.6 0.6 0.6
+        roughness 0.7
+      }
+      geometry Mesh {
+        url [
+          "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/base_link_0.obj"
+        ]
+      }
+    }
+    Shape {
+      appearance DEF JOINT_APPEARANCE PBRAppearance {
+        baseColor 0 0 0
+        roughness 1
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/base_link_1.obj"
+        ]
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 1.70116834670365
+        axis 0 0 1
+        anchor 0 0 0.163
+      }
+      device [
+        RotationalMotor {
+          name "shoulder_pan_joint"
+          maxVelocity 3.14
+          minPosition -6.28318530718
+          maxPosition 6.28318530718
+          maxTorque 150
+        }
+        PositionSensor {
+          name "shoulder_pan_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0 0.163
+        rotation 0 0 1 1.7011683467036502
+        children [
+          Shape {
+            appearance USE METAL_APPEARANCE
+            geometry Mesh {
+              url [
+                "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/shoulder_link_0.obj"
+              ]
+            }
+          }
+          Shape {
+            appearance USE JOINT_APPEARANCE
+            geometry Mesh {
+              url [
+                "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/shoulder_link_1.obj"
+              ]
+            }
+          }
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0.4902 0.678431 0.8
+              roughness 0.4
+              metalness 0
+              normalMap ImageTexture {
+                url [
+                  "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/normal_0.jpg"
+                ]
+              }
+              occlusionMap ImageTexture {
+                url [
+                  "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/occlusion_0.jpg"
+                ]
+              }
+            }
+            geometry Mesh {
+              url [
+                "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/shoulder_link_2.obj"
+              ]
+            }
+          }
+          Shape {
+            appearance DEF SCREW_APPEARANCE PBRAppearance {
+            }
+            geometry Mesh {
+              url [
+                "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/shoulder_link_3.obj"
+              ]
+            }
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              position 0.8731230274824472
+              axis 0 1 0
+              anchor 0 0.138 0
+            }
+            device [
+              RotationalMotor {
+                name "shoulder_lift_joint"
+                maxVelocity 3.14
+                minPosition -6.28318530718
+                maxPosition 6.28318530718
+                maxTorque 150
+              }
+              PositionSensor {
+                name "shoulder_lift_joint_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.00479098123745313 0.1347462565875876 -0.010706018276169122
+              rotation 6.04268686471976e-06 0.9999999999794005 2.1644608782281034e-06 2.4546921116072635
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 0.4902 0.678431 0.8
+                    roughness 0.4
+                    metalness 0
+                    normalMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/normal_1.jpg"
+                      ]
+                    }
+                    occlusionMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/occlusion_1.jpg"
+                      ]
+                    }
+                  }
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_0.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance USE SCREW_APPEARANCE
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_1.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance USE METAL_APPEARANCE
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_2.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance USE JOINT_APPEARANCE
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_3.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 0.4902 0.678431 0.8
+                    roughness 0.4
+                    metalness 0
+                    normalMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/normal_2.jpg"
+                      ]
+                    }
+                    occlusionMap ImageTexture {
+                      url [
+                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/occlusion_2.jpg"
+                      ]
+                    }
+                  }
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_4.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance USE SCREW_APPEARANCE
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_5.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance DEF METAL_APPEARANCE_LIGHT PBRAppearance {
+                    roughness 0.7
+                  }
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_6.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance USE JOINT_APPEARANCE
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_7.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance USE METAL_APPEARANCE
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_8.obj"
+                    ]
+                  }
+                }
+                Shape {
+                  appearance USE JOINT_APPEARANCE
+                  geometry Mesh {
+                    url [
+                      "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/upper_arm_link_9.obj"
+                    ]
+                  }
+                }
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    position -2.037485707119874
+                    axis 0 1 0
+                    anchor 0 -0.131 0.425
+                  }
+                  device [
+                    RotationalMotor {
+                      name "elbow_joint"
+                      maxVelocity 3.14
+                      minPosition -3.14159265359
+                      maxPosition 3.14159265359
+                      maxTorque 150
+                    }
+                    PositionSensor {
+                      name "elbow_joint_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    translation 0 -0.131 0.425
+                    rotation 0 -1 0 2.037485707119874
+                    children [
+                      Shape {
+                        appearance USE METAL_APPEARANCE
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_0.obj"
+                          ]
+                        }
+                      }
+                      Shape {
+                        appearance USE METAL_APPEARANCE
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_1.obj"
+                          ]
+                        }
+                      }
+                      Shape {
+                        appearance USE JOINT_APPEARANCE
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_2.obj"
+                          ]
+                        }
+                      }
+                      Shape {
+                        appearance USE METAL_APPEARANCE_LIGHT
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_3.obj"
+                          ]
+                        }
+                      }
+                      Shape {
+                        appearance USE JOINT_APPEARANCE
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_4.obj"
+                          ]
+                        }
+                      }
+                      Shape {
+                        appearance PBRAppearance {
+                          baseColor 0.4902 0.678431 0.8
+                          roughness 0.4
+                          metalness 0
+                          normalMap ImageTexture {
+                            url [
+                              "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/normal_3.jpg"
+                            ]
+                          }
+                          occlusionMap ImageTexture {
+                            url [
+                              "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/occlusion_3.jpg"
+                            ]
+                          }
+                        }
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_5.obj"
+                          ]
+                        }
+                      }
+                      Shape {
+                        appearance USE SCREW_APPEARANCE
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_6.obj"
+                          ]
+                        }
+                      }
+                      Shape {
+                        appearance USE JOINT_APPEARANCE
+                        geometry Mesh {
+                          url [
+                            "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/forearm_link_7.obj"
+                          ]
+                        }
+                      }
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          position -0.3897387602228056
+                          axis 0 1 0
+                          anchor 0 0 0.392
+                        }
+                        device [
+                          RotationalMotor {
+                            name "wrist_1_joint"
+                            maxVelocity 6.28
+                            minPosition -6.28318530718
+                            maxPosition 6.28318530718
+                            maxTorque 28
+                          }
+                          PositionSensor {
+                            name "wrist_1_joint_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation 0 0 0.392
+                          rotation 0 1 0 1.1810572397771866
+                          children [
+                            Shape {
+                              appearance USE METAL_APPEARANCE
+                              geometry Mesh {
+                                url [
+                                  "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_1_link_0.obj"
+                                ]
+                              }
+                            }
+                            Shape {
+                              appearance PBRAppearance {
+                                baseColor 0.4902 0.678431 0.8
+                                roughness 0.4
+                                metalness 0
+                                normalMap ImageTexture {
+                                  url [
+                                    "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/normal_4.jpg"
+                                  ]
+                                }
+                                occlusionMap ImageTexture {
+                                  url [
+                                    "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/occlusion_4.jpg"
+                                  ]
+                                }
+                              }
+                              geometry Mesh {
+                                url [
+                                  "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_1_link_1.obj"
+                                ]
+                              }
+                            }
+                            Shape {
+                              appearance USE SCREW_APPEARANCE
+                              geometry Mesh {
+                                url [
+                                  "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_1_link_2.obj"
+                                ]
+                              }
+                            }
+                            Shape {
+                              appearance USE JOINT_APPEARANCE
+                              geometry Mesh {
+                                url [
+                                  "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_1_link_3.obj"
+                                ]
+                              }
+                            }
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -1.570796326680847
+                                axis 0 0 1
+                                anchor 0 0.127 0
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "wrist_2_joint"
+                                  maxVelocity 6.28
+                                  minPosition -6.28318530718
+                                  maxPosition 6.28318530718
+                                  maxTorque 28
+                                }
+                                PositionSensor {
+                                  name "wrist_2_joint_sensor"
+                                }
+                              ]
+                              endPoint Solid {
+                                translation 0 0.127 0
+                                rotation 0 0 -1 1.570796326680847
+                                children [
+                                  Shape {
+                                    appearance USE METAL_APPEARANCE
+                                    geometry Mesh {
+                                      url [
+                                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_2_link_0.obj"
+                                      ]
+                                    }
+                                  }
+                                  Shape {
+                                    appearance PBRAppearance {
+                                      baseColor 0.4902 0.678431 0.8
+                                      roughness 0.4
+                                      metalness 0
+                                      normalMap ImageTexture {
+                                        url [
+                                          "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/normal_5.jpg"
+                                        ]
+                                      }
+                                      occlusionMap ImageTexture {
+                                        url [
+                                          "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/textures/occlusion_5.jpg"
+                                        ]
+                                      }
+                                    }
+                                    geometry Mesh {
+                                      url [
+                                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_2_link_1.obj"
+                                      ]
+                                    }
+                                  }
+                                  Shape {
+                                    appearance USE SCREW_APPEARANCE
+                                    geometry Mesh {
+                                      url [
+                                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_2_link_2.obj"
+                                      ]
+                                    }
+                                  }
+                                  Shape {
+                                    appearance USE JOINT_APPEARANCE
+                                    geometry Mesh {
+                                      url [
+                                        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_2_link_3.obj"
+                                      ]
+                                    }
+                                  }
+                                  HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      position -2.655078679506474e-06
+                                      axis 0 1 0
+                                      anchor 0 0 0.1
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "wrist_3_joint"
+                                        maxVelocity 6.28
+                                        minPosition -6.28318530718
+                                        maxPosition 6.28318530718
+                                        maxTorque 28
+                                      }
+                                      PositionSensor {
+                                        name "wrist_3_joint_sensor"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      translation -2.2732280396509095e-06 4.573533227247609e-06 0.09998708956126434
+                                      rotation -0.14894632905792632 -0.9888144150129928 0.007813048232345743 2.5897172137429568e-06
+                                      children [
+                                        Shape {
+                                          appearance USE METAL_APPEARANCE
+                                          geometry Mesh {
+                                            url [
+                                              "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/universal_robots/protos/UR5e/meshes/wrist_3_link_0.obj"
+                                            ]
+                                          }
+                                        }
+                                        Pose {
+                                          translation 0 0.1 0
+                                        }
+                                      ]
+                                      name "wrist_3_link"
+                                      boundingObject Group {
+                                        children [
+                                          Pose {
+                                            translation 0 0.07 0
+                                            rotation 1 0 0 -1.57079632679
+                                            children [
+                                              Cylinder {
+                                                height 0.048
+                                                radius 0.038
+                                              }
+                                            ]
+                                          }
+                                          Pose {
+                                            translation 0 0.09 0
+                                            rotation 1 0 0 -1.57079632679
+                                            children [
+                                              Cylinder {
+                                                height 0.018
+                                                radius 0.032
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                      physics Physics {
+                                        density -1
+                                        mass 0.365
+                                        centerOfMass [
+                                          0 0.071 0
+                                        ]
+                                      }
+                                      linearVelocity 0.01143777925055824 -0.0872997629631711 0.05671781559611891
+                                      angularVelocity 0.24284919229261692 0.03165752006889025 6.853171974733265e-05
+                                    }
+                                  }
+                                ]
+                                name "wrist_2_link"
+                                boundingObject Group {
+                                  children [
+                                    Pose {
+                                      translation 0 -0.001 0.0995
+                                      rotation 1 0 0 -1.57079632679
+                                      children [
+                                        Cylinder {
+                                          height 0.108
+                                          radius 0.04
+                                        }
+                                      ]
+                                    }
+                                    Pose {
+                                      translation 0 -0.001 0.0676
+                                      children [
+                                        Cylinder {
+                                          height 0.043
+                                          radius 0.038
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                                physics Physics {
+                                  density -1
+                                  mass 1.3
+                                  centerOfMass [
+                                    0 0 0.1
+                                  ]
+                                }
+                                linearVelocity 0.01390833349496948 -0.10631514636500497 0.05419049681695013
+                                angularVelocity 0.24284961482134743 0.03165757857893946 6.845523563106352e-05
+                              }
+                            }
+                          ]
+                          name "wrist_1_link"
+                          boundingObject Group {
+                            children [
+                              Pose {
+                                translation 0 0.089 0
+                                rotation 1 0 0 -1.57079632679
+                                children [
+                                  Cylinder {
+                                    height 0.086
+                                    radius 0.038
+                                  }
+                                ]
+                              }
+                              Pose {
+                                translation 0 0.126 0
+                                children [
+                                  Cylinder {
+                                    height 0.112
+                                    radius 0.038
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                          physics Physics {
+                            density -1
+                            mass 1.37
+                            centerOfMass [
+                              0 0.127 0
+                            ]
+                          }
+                          linearVelocity 0.013451493977161362 -0.10276819834755874 0.027222891343731927
+                          angularVelocity 0.242855953571452 0.03165840921430294 6.847658248110544e-05
+                        }
+                      }
+                    ]
+                    name "forearm_link"
+                    boundingObject Group {
+                      children [
+                        Pose {
+                          translation 0 0 0.207
+                          children [
+                            Cylinder {
+                              height 0.36
+                              radius 0.038
+                            }
+                          ]
+                        }
+                        Pose {
+                          translation 0 -0.001 0.39
+                          rotation 1 0 0 -1.57079632679
+                          children [
+                            Cylinder {
+                              height 0.109
+                              radius 0.039
+                            }
+                          ]
+                        }
+                        Pose {
+                          translation 0 0.06 0
+                          rotation 1 0 0 1.57079632679
+                          children [
+                            Capsule {
+                              height 0.05
+                              radius 0.058
+                              subdivision 16
+                            }
+                          ]
+                        }
+                        Pose {
+                          translation 0 0 0.07
+                          children [
+                            Capsule {
+                              height 0.1
+                              radius 0.04
+                              subdivision 16
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                    physics Physics {
+                      density -1
+                      mass 2.846
+                      centerOfMass [
+                        0 0 0.15
+                      ]
+                    }
+                    linearVelocity 0.0052117514865825335 -0.03962446445479006 0.010464138966295729
+                    angularVelocity 0.24286412990428213 0.03172489265357704 0.00017023268439733674
+                  }
+                }
+              ]
+              name "upper_arm_link"
+              boundingObject Group {
+                children [
+                  Pose {
+                    translation 0 0 0.22
+                    children [
+                      Cylinder {
+                        height 0.407
+                        radius 0.059
+                      }
+                    ]
+                  }
+                  Pose {
+                    rotation 1 0 0 -1.57079632679
+                    children [
+                      Cylinder {
+                        height 0.133
+                        radius 0.059
+                      }
+                    ]
+                  }
+                  Pose {
+                    translation 0 -0.005 0.424
+                    rotation 1 0 0 -1.57079632679
+                    children [
+                      Cylinder {
+                        height 0.149
+                        radius 0.059
+                      }
+                    ]
+                  }
+                ]
+              }
+              physics Physics {
+                density -1
+                mass 8.058
+                centerOfMass [
+                  0 0 0.2125
+                ]
+              }
+              linearVelocity 0.0001117899402172087 -0.0003617863947897067 9.902912544171816e-05
+              angularVelocity -0.00017335615760468521 -6.136041917747632e-05 7.384507906263165e-05
+            }
+          }
+        ]
+        name "shoulder_link"
+        boundingObject Group {
+          children [
+            Pose {
+              children [
+                Cylinder {
+                  height 0.135
+                  radius 0.059
+                }
+              ]
+            }
+            Pose {
+              translation 0 0.03 0
+              rotation 1 0 0 -1.57079632679
+              children [
+                Cylinder {
+                  height 0.093
+                  radius 0.059
+                }
+              ]
+            }
+          ]
+        }
+        physics Physics {
+          density -1
+          mass 3.761
+          centerOfMass [
+            0 -0.02561 0.00193
+          ]
+        }
+        linearVelocity 4.772692152240159e-05 -9.937688475439588e-05 3.657174314286841e-05
+        angularVelocity -3.274565773386639e-05 -6.16524625731686e-06 4.952933127152645e-06
+      }
+    }
+  ]
+  name "UR5e"
+  model "UR5e"
+  boundingObject Pose {
+    translation 0 0 0.05
+    children [
+      Cylinder {
+        height 0.1
+        radius 0.076
+      }
+    ]
+  }
+  controller "PushButtons"
+  supervisor TRUE
+  selfCollision TRUE
+}
+DEF Box SolidBox {
+  translation 0 0 0.39
+  size 0.02 0.02 0.02
+}
+DEF Box1 SolidBox {
+  translation -0.2 0.5 0.1
+  name "box(1)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
+DEF Box2 SolidBox {
+  translation -0.05000000000000002 0.5 0.1
+  name "box(2)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
+DEF Box3 SolidBox {
+  translation 0.09999999999999998 0.5 0.1
+  name "box(3)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
+DEF Box4 SolidBox {
+  translation 0.24999999999999997 0.5 0.1
+  name "box(4)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
+DEF Box5 SolidBox {
+  translation -0.2 0.6 0.1
+  name "box(5)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
+DEF Box6 SolidBox {
+  translation -0.05000000000000002 0.6 0.1
+  name "box(6)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
+DEF Box7 SolidBox {
+  translation 0.09999999999999998 0.6 0.1
+  name "box(7)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
+DEF Box8 SolidBox {
+  translation 0.24999999999999997 0.6 0.1
+  name "box(8)"
+  size 0.02 0.02 0.02
+  enableBoundingObject FALSE
+}
