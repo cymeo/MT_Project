@@ -4,19 +4,21 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/solids/protos/SolidBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/solids/protos/SolidPipe.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/tables/protos/Table.proto"
 
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.18499598572956275 0.8278658015802063 -0.5295419717434212 0.6709050216090632
-  position -2.1271686396764435 1.7334305388464615 1.681364314631595
+  orientation 0.2881614815012545 0.03312783090932444 -0.957008624516125 2.852724286117004
+  position 3.5642724019077887 1.7465323844853007 2.7761344400863694
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
-  translation 0 0 -1.41
+  translation 0 0 -0.74
   floorSize 5 5
 }
 DEF Robot Robot {
@@ -148,7 +150,7 @@ DEF Robot Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.70116834670365
+        position 1.2700639062746502
         axis 0 0 1
         anchor 0 0 0.163
       }
@@ -166,7 +168,7 @@ DEF Robot Robot {
       ]
       endPoint Solid {
         translation 0 0 0.163
-        rotation 0 0 1 1.7011683467036502
+        rotation 0 0 1 1.2700639062746502
         children [
           Shape {
             appearance USE METAL_APPEARANCE
@@ -217,7 +219,7 @@ DEF Robot Robot {
           }
           HingeJoint {
             jointParameters HingeJointParameters {
-              position 0.8731230274824472
+              position -1.1806880946569414
               axis 0 1 0
               anchor 0 0.138 0
             }
@@ -234,8 +236,8 @@ DEF Robot Robot {
               }
             ]
             endPoint Solid {
-              translation 0.00479098123745313 0.1347462565875876 -0.010706018276169122
-              rotation 6.04268686471976e-06 0.9999999999794005 2.1644608782281034e-06 2.4546921116072635
+              translation 0.007256059232670614 0.1347462565875876 0.009215309705011089
+              rotation 6.028712328645224e-06 0.9999999995392761 2.975066851682682e-05 0.40088098963462143
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -349,7 +351,7 @@ DEF Robot Robot {
                 }
                 HingeJoint {
                   jointParameters HingeJointParameters {
-                    position -2.037485707119874
+                    position 1.5346926306544466
                     axis 0 1 0
                     anchor 0 -0.131 0.425
                   }
@@ -367,7 +369,7 @@ DEF Robot Robot {
                   ]
                   endPoint Solid {
                     translation 0 -0.131 0.425
-                    rotation 0 -1 0 2.037485707119874
+                    rotation 0 1 0 1.5346926306544464
                     children [
                       Shape {
                         appearance USE METAL_APPEARANCE
@@ -449,7 +451,7 @@ DEF Robot Robot {
                       }
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position -0.3897387602228056
+                          position 1.2167789368933155
                           axis 0 1 0
                           anchor 0 0 0.392
                         }
@@ -467,7 +469,7 @@ DEF Robot Robot {
                         ]
                         endPoint Solid {
                           translation 0 0 0.392
-                          rotation 0 1 0 1.1810572397771866
+                          rotation 0 1 0 2.787574936893307
                           children [
                             Shape {
                               appearance USE METAL_APPEARANCE
@@ -517,7 +519,7 @@ DEF Robot Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -1.570796326680847
+                                position 1.5707961320081267
                                 axis 0 0 1
                                 anchor 0 0.127 0
                               }
@@ -535,7 +537,7 @@ DEF Robot Robot {
                               ]
                               endPoint Solid {
                                 translation 0 0.127 0
-                                rotation 0 0 -1 1.570796326680847
+                                rotation 0 0 1 1.5707961320081265
                                 children [
                                   Shape {
                                     appearance USE METAL_APPEARANCE
@@ -585,7 +587,7 @@ DEF Robot Robot {
                                   }
                                   HingeJoint {
                                     jointParameters HingeJointParameters {
-                                      position -2.655078679506474e-06
+                                      position -3.442327307471836
                                       axis 0 1 0
                                       anchor 0 0 0.1
                                     }
@@ -602,8 +604,8 @@ DEF Robot Robot {
                                       }
                                     ]
                                     endPoint Solid {
-                                      translation -2.2732280396509095e-06 4.573533227247609e-06 0.09998708956126434
-                                      rotation -0.14894632905792632 -0.9888144150129928 0.007813048232345743 2.5897172137429568e-06
+                                      translation -1.6531174696665057e-06 4.573533227247543e-06 0.10001300439143906
+                                      rotation 1.910447610098004e-08 -0.9999999999999809 -1.944018634860693e-07 3.442327213171569
                                       children [
                                         Shape {
                                           appearance USE METAL_APPEARANCE
@@ -649,8 +651,6 @@ DEF Robot Robot {
                                           0 0.071 0
                                         ]
                                       }
-                                      linearVelocity 0.01143777925055824 -0.0872997629631711 0.05671781559611891
-                                      angularVelocity 0.24284919229261692 0.03165752006889025 6.853171974733265e-05
                                     }
                                   }
                                 ]
@@ -685,8 +685,6 @@ DEF Robot Robot {
                                     0 0 0.1
                                   ]
                                 }
-                                linearVelocity 0.01390833349496948 -0.10631514636500497 0.05419049681695013
-                                angularVelocity 0.24284961482134743 0.03165757857893946 6.845523563106352e-05
                               }
                             }
                           ]
@@ -721,8 +719,6 @@ DEF Robot Robot {
                               0 0.127 0
                             ]
                           }
-                          linearVelocity 0.013451493977161362 -0.10276819834755874 0.027222891343731927
-                          angularVelocity 0.242855953571452 0.03165840921430294 6.847658248110544e-05
                         }
                       }
                     ]
@@ -778,8 +774,6 @@ DEF Robot Robot {
                         0 0 0.15
                       ]
                     }
-                    linearVelocity 0.0052117514865825335 -0.03962446445479006 0.010464138966295729
-                    angularVelocity 0.24286412990428213 0.03172489265357704 0.00017023268439733674
                   }
                 }
               ]
@@ -823,8 +817,6 @@ DEF Robot Robot {
                   0 0 0.2125
                 ]
               }
-              linearVelocity 0.0001117899402172087 -0.0003617863947897067 9.902912544171816e-05
-              angularVelocity -0.00017335615760468521 -6.136041917747632e-05 7.384507906263165e-05
             }
           }
         ]
@@ -858,8 +850,6 @@ DEF Robot Robot {
             0 -0.02561 0.00193
           ]
         }
-        linearVelocity 4.772692152240159e-05 -9.937688475439588e-05 3.657174314286841e-05
-        angularVelocity -3.274565773386639e-05 -6.16524625731686e-06 4.952933127152645e-06
       }
     }
   ]
@@ -874,13 +864,9 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "PushButtons"
+  controller "controller_test"
   supervisor TRUE
   selfCollision TRUE
-}
-DEF Box SolidBox {
-  translation 0 0 0.39
-  size 0.02 0.02 0.02
 }
 DEF Box1 SolidBox {
   translation -0.2 0.5 0.1
@@ -929,4 +915,30 @@ DEF Box8 SolidBox {
   name "box(8)"
   size 0.02 0.02 0.02
   enableBoundingObject FALSE
+}
+SolidPipe {
+  translation -0.1 0.778491 0.201509
+  rotation 1 0 0 -0.785395307179586
+  height 0.3
+  radius 0.05
+  appearance PBRAppearance {
+    baseColor 1 1 0.9
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+      repeatS FALSE
+      repeatT FALSE
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+Table {
+  translation 0 0 -0.74
+}
+DEF Box SolidBox {
+  translation 0 0.45 0.32
+  rotation 1 0 0 3.14159
+  size 0.02 0.02 0.02
 }
