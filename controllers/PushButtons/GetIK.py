@@ -58,6 +58,7 @@ def motorSensorInfos(timestep):
         sensors[n+2]= sensor.getValue()
     return sensors 
 
+# gets EE-Pose 
 def getTipPose(Sensorsinfos): 
     return robot_chain.forward_kinematics(Sensorsinfos)
 
