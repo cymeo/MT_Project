@@ -51,6 +51,7 @@ def moveMotors(motorangles):
     pass  
 
 def motorSensorInfos(timestep):
+     
     sensors = np.zeros(10)
     for n, motor in enumerate(motors):
         sensor = motor.getPositionSensor()
