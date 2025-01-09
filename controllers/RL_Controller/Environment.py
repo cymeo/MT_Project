@@ -7,7 +7,6 @@ from scipy.spatial.transform import Rotation as R
 class WeBot_environment(gym.Env):
     """Custom Environment that follows gym interface."""
 
-    metadata = {"render_modes": ["human"], "render_fps": 30}
     def __init__(self):
         super().__init__()
         # Define action and observation space
@@ -23,8 +22,8 @@ class WeBot_environment(gym.Env):
                     dtype = float
                     ), 
                 "theta": spaces.Box(
-                        low = np.array([-np.pi, -np.pi, -np.pi,-np.pi, -np.pi, -np.pi]),
-                        high =np.array([np.pi, np.pi, np.pi,np.pi, np.pi, np.pi]),
+                        low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
+                        high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
                         dtype = float
                     ),
                 "goal":spaces.Box(
@@ -58,18 +57,19 @@ class WeBot_environment(gym.Env):
         #further Parameters
         self.current_step = 0
         self.theta = np.zeros(6)
-        self.goal = np.random((4,4))
+        self.goal = np.array([0.3,0.2,0.3])
 
     def get_observation(self):
         #### todos: 
         # get motor,angles theta
-        self.theta = FW.get_motor_pos(self.timestep)
+        self.theta = FW.get_motor_pos()
         # get foreward kinematics 
         p_end = FW.get_forward_kinematics(self.theta)
-        transl = p_end[:3,3]
+        transl = np.array(p_end[:3,3])
         rot= R.from_matrix(p_end[:3,:3])
-        rot_quat= rot.as_quat()
-        self.p_end = np.concatenate(transl,rot_quat)
+        rot_quat= np.array(rot.as_quat())
+        #print("transl: ", transl, "   rot: ", rot_quat)
+        self.p_end = np.concatenate((transl,rot_quat))
 
         observation = { 
             "p_end": self.p_end, 
@@ -78,7 +78,6 @@ class WeBot_environment(gym.Env):
         }
         
         return observation
-
 
     def get_distance(self):
         dist = np.linalg.norm(self.goal - self.p_end[:3])
@@ -94,9 +93,9 @@ class WeBot_environment(gym.Env):
     
     def check_done(self):
         success =False 
-        dist = self.get_distance()
+        dist, rot_dist = self.get_distance()
         #sucess
-        if (dist <= 0.05):
+        if (dist <= 0.05 and rot_dist <= np.pi/6):
             success = True
             return True, success
         # step mlimit reached           
@@ -116,7 +115,7 @@ class WeBot_environment(gym.Env):
         done, success  = self.check_done()
         
         R_dist, R_rot_dist = self.get_distance()
-        
+    
         if success: 
            R_success = 1  
         if (done and (success == False)): 
@@ -129,11 +128,10 @@ class WeBot_environment(gym.Env):
             -self.weights[3]*R_fail )       
         return total_reward
 
-
     def step(self, action):
         
         self.current_step += 1 
-        FW.move(self.theta + action) 
+        FW.move_robot(self.theta + action) 
         
         observation = self.get_observation()
         reward = self.get_reward()
@@ -144,7 +142,8 @@ class WeBot_environment(gym.Env):
         return observation, reward, done, truncated, info
 
     def reset(self, seed=None, options=None):
-               
+        super().reset(seed=seed)
+        FW.reset_sim()     
         # new goal_pos
         rand_x = np.random.uniform(0.1, 0.8) 
         rand_y = np.random.uniform(0.5, 0.5)
@@ -152,7 +151,7 @@ class WeBot_environment(gym.Env):
         self.goal = np.array([rand_x,rand_y,rand_z])
         #rand_angles = np.random.uniform(-1.8 * np.pi, 1.8 * np.pi, 6)
         #self.goal = FW.get_forward_kinematics(rand_angles)
-        super().reset(seed=seed)
+        
         
         self.current_step = 0
         observation = self.get_observation()
