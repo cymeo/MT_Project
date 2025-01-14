@@ -10,15 +10,15 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.1630102624311439 -0.06180274423044911 0.9846867903794156 4.3748793649748645
-  position 1.269155826417162 2.782546965280227 0.899584807116421
+  orientation -0.073222803433385 0.0075716732627600595 0.9972868648595337 4.1284969975822365
+  position 4.5278170510104845 7.2037480924108515 1.4315742472465098
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
-  translation 0 0 -0.74
+  translation 0 0 -1.22
   floorSize 5 5
 }
 DEF Robot Robot {
@@ -236,7 +236,7 @@ DEF Robot Robot {
               }
             ]
             endPoint Solid {
-              translation 0.007719836653377799 0.13472673434860294 0.009683791589269995
+              translation 0.007719836653377793 0.13472673434860294 0.009683791589269986
               rotation 0 1 0 0.49045392992353715
               children [
                 Shape {
@@ -604,8 +604,8 @@ DEF Robot Robot {
                                       }
                                     ]
                                     endPoint Solid {
-                                      translation 1.300934546490536e-05 4.5735332272475495e-06 0.1000016136680712
-                                      rotation -1.456189536855966e-07 -0.9999999999999738 -1.7681159823938708e-07 1.8684979259762609
+                                      translation 1.3009345464869753e-05 4.5735332272475495e-06 0.1000016136680715
+                                      rotation -1.4471939632427732e-07 -0.999999999999974 -1.757193491184436e-07 1.8684979265577955
                                       children [
                                         Shape {
                                           appearance USE METAL_APPEARANCE
@@ -917,11 +917,12 @@ DEF Box8 SolidBox {
   enableBoundingObject FALSE
 }
 DEF Arm SolidPipe {
-  translation 0.57 -0.67 0.448994
+  translation 0.965976 -0.67 0.84497
   rotation 0 1 0 0.785398
   name "Arm"
   height 0.4
   radius 0.05
+  thickness 0.04
   appearance PBRAppearance {
     baseColor 1 1 0.9
     baseColorMap ImageTexture {
@@ -936,11 +937,12 @@ DEF Arm SolidPipe {
   }
 }
 Table {
-  translation 0 0 -0.75
+  translation 0 0 -2.55
   rotation 0 0 1 -1.5707953071795862
 }
 DEF Box SolidBox {
-  translation 0.65 -0.06 0.25
+  translation 1.41 -0.06 0.25
   rotation 1 0 0 3.14159
   size 0.02 0.02 0.02
+  enableBoundingObject FALSE
 }

@@ -3,6 +3,7 @@ from controller import Robot, Supervisor,Connector
 from ikpy.chain import Chain
 import numpy as np
 from scipy.spatial.transform import Rotation as R
+import time
 
 ###### Controll Robot and Arm Movements ######################################
 
@@ -13,9 +14,21 @@ supervisor = Supervisor()
 robot_chain = Chain.from_urdf_file("ur5e.urdf")
 # Print the chain to verify the correct links are included
 #print(robot_chain)
-####define basic time step
+
+#define basic time step
 timestep = int(supervisor.getBasicTimeStep())
 
+#get Robot 
+robot_node = supervisor.getFromDef('Robot')
+#get table 
+box_node = supervisor.getFromDef('Box')
+
+
+def get_dist(): 
+    robot_pos = robot_node.getPosition()
+    print('robotpos:', robot_pos)
+
+#get motors
 motors = []
 motors.append(supervisor.getDevice('shoulder_pan_joint'))
 motors.append(supervisor.getDevice('shoulder_lift_joint'))
@@ -52,12 +65,31 @@ def reset_sim():
     pass
 
 def move_robot(angles):
-    for n, motor in enumerate(motors):
-        motor.setPosition(angles[n])
-    pass
+
+    sensors= np.zeros(6)        
+    start_time = time.time()
+    
+    while True: 
+        supervisor.step(timestep)
+        current_pos = get_motor_pos()
+        
+        if all (abs(current_pos-angles) <= 0.01): 
+            print("moved")
+            break
+        
+        for n, motor in enumerate(motors):
+            motor.setPosition(angles[n])
+            sensor = motor.getPositionSensor()
+            sensor.enable(timestep)
+            sensors[n] = sensor.getValue()
+        
+        
+        # Check for timeout
+        if time.time() - start_time > 5:
+            print("Warning: Motor movement timeout!")
+            break
+        time.sleep(0.01)
+    
+    return sensors
 
 
-
-
-
-timestep = int(supervisor.getBasicTimeStep())
