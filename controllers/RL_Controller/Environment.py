@@ -12,8 +12,9 @@ class WeBot_environment(Env):
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
-        self.action_space = spaces.Box(low= -np.pi/2, high = np.pi/2, shape = (6,))
+        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
+        
         self.observation_space = spaces.Dict(
             {
                 "goal":spaces.Box(
@@ -59,6 +60,7 @@ class WeBot_environment(Env):
         #further Parameters
         self.current_step = 0
         self.theta = np.zeros(6)
+        self.crashed = False
         self.goal = np.array([0.3,0.2,0.3])
 
     def get_observation(self):
@@ -104,8 +106,8 @@ class WeBot_environment(Env):
         if (self.current_step >= 600):
             print("too many steps") 
             return True, success
-        if FW.check_crash(): 
-            print("Crash")
+        if self.crashed: 
+            #print("Crash")
             return True, success
         
         return False, success
@@ -136,8 +138,8 @@ class WeBot_environment(Env):
         self.current_step += 1 
         new_theta = np.clip((self.theta+action), -2*np.pi, 2*np.pi)
         new_theta[2] = np.clip(new_theta[2], -3, 3)
-        print("new_theta",new_theta)
-        self.theta = FW.move_robot(new_theta) 
+        #print("new_theta",new_theta)
+        self.theta, self.crashed = FW.move_robot(new_theta) 
         
         observation = self.get_observation()
         reward = self.get_reward()
@@ -154,7 +156,7 @@ class WeBot_environment(Env):
         return observation, reward, done, truncated, info
 
     def reset(self, seed=None, options=None):
-        print("reset simuation")
+        #print("reset simuation")
         super().reset(seed=seed)
         #FW.reset_sim()     
         # new goal_pos
@@ -162,6 +164,7 @@ class WeBot_environment(Env):
         rand_y = np.random.uniform(0.5, 0.5)
         rand_z = np.random.uniform(0,0.5)
         self.goal = np.array([rand_x,rand_y,rand_z])
+        self.crashed = False
         #rand_angles = np.random.uniform(-1.8 * np.pi, 1.8 * np.pi, 6)
         #self.goal = FW.get_forward_kinematics(rand_angles)
         

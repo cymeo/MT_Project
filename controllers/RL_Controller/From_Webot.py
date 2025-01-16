@@ -19,15 +19,15 @@ robot_chain = Chain.from_urdf_file("ur5e.urdf")
 timestep = int(supervisor.getBasicTimeStep())
 
 #get Robot 
-robot_node = supervisor.getFromDef('Robot')
-#get table 
-box_node = supervisor.getFromDef('Box')
+robot_node = supervisor.getFromDef('Robot') 
+box = supervisor.getFromDef('Box')
+arm = supervisor.getFromDef('Arm')
+table = supervisor.getFromDef('Table')
 
 
 def get_dist(): 
-    robot_pos = robot_node.getPosition()
-    print('robotpos:', robot_pos)
-
+    pass       
+        
 #get motors
 motors = []
 motors.append(supervisor.getDevice('shoulder_pan_joint'))
@@ -55,26 +55,37 @@ def get_forward_kinematics(angles):
     return(robotTipMatrix)
 
 def check_crash():
-    
+    # Check for contact points
+    contact_robot = robot_node.getContactPoints(includeDescendants=True)
+    contact_table = table.getContactPoints(includeDescendants = True)
     crashed = False
-    # todo
-    return crashed 
+    if contact_table: 
+        #print("table crash")
+        crashed = True
+    if contact_robot: 
+        #print("robot crash")
+        crashed = True
+    return crashed
+    
 
 def reset_sim():
     supervisor.simulationReset()
     pass
 
 def move_robot(angles):
-
+    crashed = False
     sensors= np.zeros(6)        
     start_time = time.time()
     
     while True: 
         supervisor.step(timestep)
         current_pos = get_motor_pos()
+        crashed = check_crash()
+        if check_crash() == True: 
+            break
         
         if all (abs(current_pos-angles) <= 0.01): 
-            print("moved")
+            #print("moved")
             break
         
         for n, motor in enumerate(motors):
@@ -90,6 +101,6 @@ def move_robot(angles):
             break
         time.sleep(0.01)
     
-    return sensors
+    return sensors, crashed
 
 

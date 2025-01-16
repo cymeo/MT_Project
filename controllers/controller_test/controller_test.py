@@ -28,28 +28,7 @@ motors.append(supervisor.getDevice('wrist_3_joint'))
 print("motors_length", np.size(motors))
 
 box0 = supervisor.getFromDef("Box")
-box1 = supervisor.getFromDef("Box1")
-box2 = supervisor.getFromDef("Box2")
-box3 = supervisor.getFromDef("Box3")
-box4 = supervisor.getFromDef("Box4")
-box5 = supervisor.getFromDef("Box5")
-box6 = supervisor.getFromDef("Box6")
-box7 = supervisor.getFromDef("Box7")
-box8 = supervisor.getFromDef("Box8")
-boxes = [box1,box2,box3,box4,box5,box6,box7,box8]
 
-boxpos = [0.5, -0.2,0.1]
-
-######Set Position of Boxes 
-for i, box in enumerate(boxes):              
-    tf = box.getField('translation') # translation field
-    tf.setSFVec3f(boxpos)
-    boxpos = (np.add(np.array(boxpos), np.array([0,0.15,0]))) # choose next location for the box
-    boxpos = boxpos.tolist()
-    if (i == 3):
-        boxpos = [0.6, -0.2,0.1]
-
-i = 0 
 robot = supervisor.getFromDef("Robot")
 
 while supervisor.step(timestep) != -1:
