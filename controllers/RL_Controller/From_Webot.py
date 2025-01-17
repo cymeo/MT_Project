@@ -104,3 +104,13 @@ def move_robot(angles):
     return sensors, crashed
 
 
+def show_goal(position):
+    #print('pos =' , position.tolist())
+    translation = box.getField("translation")
+    #position = [position[0],position[1], position[2] ]
+    #print('transl before:', translation.getSFVec3f() )
+    translation.setSFVec3f(position.tolist())
+    pass
+    
+
+

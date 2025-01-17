@@ -14,7 +14,7 @@ class WeBot_environment(Env):
         #action = Motorangle steps  
         self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
-        
+        self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
         self.observation_space = spaces.Dict(
             {
                 "goal":spaces.Box(
@@ -137,7 +137,8 @@ class WeBot_environment(Env):
         
         self.current_step += 1 
         new_theta = np.clip((self.theta+action), -2*np.pi, 2*np.pi)
-        new_theta[2] = np.clip(new_theta[2], -3, 3)
+        new_theta[2] = np.clip(new_theta[2], -np.pi, np.pi)
+        new_theta[1] = np.clip(new_theta[1],-np.pi,0)
         #print("new_theta",new_theta)
         self.theta, self.crashed = FW.move_robot(new_theta) 
         
@@ -156,14 +157,16 @@ class WeBot_environment(Env):
         return observation, reward, done, truncated, info
 
     def reset(self, seed=None, options=None):
-        #print("reset simuation")
+        print("reset")
         super().reset(seed=seed)
         #FW.reset_sim()     
         # new goal_pos
         rand_x = np.random.uniform(0.1, 0.8) 
-        rand_y = np.random.uniform(0.5, 0.5)
+        rand_y = np.random.uniform(-0.5, 0.5)
         rand_z = np.random.uniform(0,0.5)
         self.goal = np.array([rand_x,rand_y,rand_z])
+        FW.show_goal(self.goal)
+        FW.move_robot(self.reset_pose)
         self.crashed = False
         #rand_angles = np.random.uniform(-1.8 * np.pi, 1.8 * np.pi, 6)
         #self.goal = FW.get_forward_kinematics(rand_angles)

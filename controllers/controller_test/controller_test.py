@@ -2,6 +2,8 @@
 from controller import Robot, Supervisor,Connector
 from ikpy.chain import Chain
 import numpy as np
+
+from numpy import pi
 from scipy.spatial.transform import Rotation as R
 
 ###### let Robot follow a Box ######################################
@@ -42,19 +44,24 @@ while supervisor.step(timestep) != -1:
       
     ikAnglesD=robot_chain.inverse_kinematics(box_position,box_rotationMatrix, "all")
     
-    
+    # motors[0].setPosition(0)
+    # motors[1].setPosition(-np.pi/2)
+    # motors[2].setPosition(np.pi/2)
+    # motors[3].setPosition(-pi/2)
+    # motors[4].setPosition(-np.pi/2)
+    reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
+
     #print("ikangels",ikAnglesD)
     
     sensors = np.zeros(10)
     for n, motor in enumerate(motors):
-        motor.setPosition(ikAnglesD[n+2])
+        motor.setPosition(reset_pose[n])
+        #motor.setPosition(ikAnglesD[n+2])
         sensor = motor.getPositionSensor()
         sensor.enable(timestep)
         sensors[n+1]= sensor.getValue()
-    
     robotTipMatrix = robot_chain.forward_kinematics(sensors)
     robot_realrot = robotTipMatrix[:3,:3]
     #print("sensors: ",sensors)
 
     #print('robot rotation', robot_realrot )
-    
