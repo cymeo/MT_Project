@@ -4,11 +4,16 @@ from gymnasium import Env
 import numpy as np
 from gymnasium import spaces
 from scipy.spatial.transform import Rotation as R
+import time
 
 class WeBot_environment(Env):
     """Custom Environment that follows gym interface."""
 
     def __init__(self):
+        
+        ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
+        self.weights = np.array([1,0.0,500,300]) 
+        
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
@@ -55,13 +60,16 @@ class WeBot_environment(Env):
 
         self.action = np.zeros(6)
         self.timestep = 0
-        self.weights = np.array([0.8,0.2,500,300]) #rewards for -distance to goal,-rotational_distance, success, -max_steps/crash         
+        self.max_step = 500
+        
         
         #further Parameters
         self.current_step = 0
         self.theta = np.zeros(6)
-        self.crashed = False
         self.goal = np.array([0.3,0.2,0.3])
+        
+        self.crashed = False
+        self.done = False
 
     def get_observation(self):
         #### todos: 
@@ -93,48 +101,57 @@ class WeBot_environment(Env):
         y_axis = ee_rot[:, 1]  # Assuming 3x3 rotation matrix
         y_down = np.array([0,-1,0])  # downward direction for y 
         rot_dist = np.dot(y_axis, y_down) / (np.linalg.norm(y_axis) * np.linalg.norm(y_down))
-        return dist, rot_dist
-    
+        return dist, np.absolute(rot_dist)
+   
+   #returne done and if successed 
     def check_done(self):
-        success =False 
+        
         dist, rot_dist = self.get_distance()
         #sucess
-        if (dist <= 0.05 and rot_dist <= np.pi/6):
+        if (dist <= 0.1 and rot_dist <= np.pi/3):
             success = True
-            return True, success
+            print(success)
+            return True, True
         # step mlimit reached           
-        if (self.current_step >= 600):
+        if (self.current_step >= self.max_step):
             print("too many steps") 
-            return True, success
+            return True, False
         if self.crashed: 
-            #print("Crash")
-            return True, success
+            print("Crash")
+            return True, False
         
-        return False, success
+        return False, False
         
     def get_reward(self): 
         R_success = 0 
         R_fail = 0 
         R_dist= 0 ## distance to goal
         R_rot_dist = 0 
-        done, success  = self.check_done()
-        
-        R_dist, R_rot_dist = self.get_distance()
+        self.done, success  = self.check_done()
+        dist, rot_dist = self.get_distance()
+        R_dist = dist**2
+        R_rot_dist = rot_dist
     
         if success: 
            R_success = 1  
-        if (done and (success == False)): 
+        if (self.done and (success == False)): 
             R_fail = 1
-                       
+
+ 
         total_reward = (
             -self.weights[0]*R_dist + 
             -self.weights[1]*R_rot_dist + 
             self.weights[2]*R_success + 
-            -self.weights[3]*R_fail )       
+            -self.weights[3]*R_fail) 
+            #- self.weights[4]*R_crash)   
+
+        #print("reward", total_reward)       
+        
+        
         return total_reward
 
     def step(self, action):
-        
+
         self.current_step += 1 
         new_theta = np.clip((self.theta+action), -2*np.pi, 2*np.pi)
         new_theta[2] = np.clip(new_theta[2], -np.pi, np.pi)
@@ -143,38 +160,33 @@ class WeBot_environment(Env):
         self.theta, self.crashed = FW.move_robot(new_theta) 
         
         observation = self.get_observation()
+        self.done, _ = self.check_done()
         reward = self.get_reward()
-        done, _ = self.check_done()
+
         truncated = False 
         info = {}
-        
-        # print("observation", observation)
-        # print("reward", reward)
-        # print("done",done)
-        # print("trunc",truncated)
-        # print("info" ,info)
 
-        return observation, reward, done, truncated, info
+        return observation, reward, self.done, truncated, info
 
     def reset(self, seed=None, options=None):
-        print("reset")
         super().reset(seed=seed)
-        #FW.reset_sim()     
+        FW.reset_sim()
+        #time.sleep(0.1)
         # new goal_pos
-        rand_x = np.random.uniform(0.1, 0.8) 
-        rand_y = np.random.uniform(-0.5, 0.5)
-        rand_z = np.random.uniform(0,0.5)
-        self.goal = np.array([rand_x,rand_y,rand_z])
+        # rand_x = np.random.uniform(0.1, 0.8) 
+        # rand_y = np.random.uniform(-0.5, 0.5)
+        # rand_z = np.random.uniform(0,0.5)    
+        #self.goal = np.array([rand_x,rand_y,rand_z])
+        self.goal = np.array([0.5,0.1, 0.2 ])    
         FW.show_goal(self.goal)
-        FW.move_robot(self.reset_pose)
-        self.crashed = False
-        #rand_angles = np.random.uniform(-1.8 * np.pi, 1.8 * np.pi, 6)
-        #self.goal = FW.get_forward_kinematics(rand_angles)
-        
-        
+    
+        # reset parameters    
+        self.crashed = False        
+        self.done = False 
         self.current_step = 0
         observation = self.get_observation()
         info = {}
+        
         return observation, info
 
     def render(self):

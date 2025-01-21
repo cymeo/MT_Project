@@ -3,6 +3,7 @@ from Environment import WeBot_environment as W_Env
 
 # for training
 from stable_baselines3 import PPO   
+from stable_baselines3 import SAC 
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.vec_env import DummyVecEnv
@@ -15,24 +16,24 @@ print("environment checked")
 
 env = Monitor(env, filename=f"monitor_logs/env_00") 
 env = DummyVecEnv([lambda: env])
-model = PPO(policy = "MultiInputPolicy", env= env, n_steps=2048)                                 
-
-    
-for episode in range(2000):
-    done = False
-    obs = env.reset()
-    while not done: 
-        action,_ = model.predict(obs, deterministic=False)
-        print(env.step(action))
-        obs, reward, done, truncated = env.step(action)
-        #print(f"Step Return: obs={obs}, reward={reward}, done={done}, truncated={truncated}, info={info}")
+model = SAC(policy = "MultiInputPolicy", env= env)                                 
 
 
-        model.learn(total_timesteps= 1 , reset_num_timesteps=False)
-        if episode %2 == 0 :
-            print("episode:", episode)
-            
+obs = env.reset()
+# for episode in range(5000):
+#     print ('episode: ', episode)
+#     done = False
+#     steps = 0
+#     while not done:
+         
+#         action,_ = model.predict(obs, deterministic=False)
+#         #print(env.step(action))
+#         obs, reward, done, truncated = env.step(action)
+#         steps +=1
+#     obs = env.reset()
+#     print(steps, ' steps in episode ',episode)    
+steps = 200
+episodes = 1000
+model.learn(total_timesteps= episodes*steps, tb_log_name= "SAC_log")    
+
 model.save("ppo0")
-
-
-    

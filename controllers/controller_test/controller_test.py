@@ -44,11 +44,6 @@ while supervisor.step(timestep) != -1:
       
     ikAnglesD=robot_chain.inverse_kinematics(box_position,box_rotationMatrix, "all")
     
-    # motors[0].setPosition(0)
-    # motors[1].setPosition(-np.pi/2)
-    # motors[2].setPosition(np.pi/2)
-    # motors[3].setPosition(-pi/2)
-    # motors[4].setPosition(-np.pi/2)
     reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
 
     #print("ikangels",ikAnglesD)

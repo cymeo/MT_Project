@@ -11,12 +11,16 @@ import time
 # define a Supervisor
 supervisor = Supervisor()
 # Load the chain by specifying the elements you want to include
-robot_chain = Chain.from_urdf_file("ur5e.urdf")
-# Print the chain to verify the correct links are included
+AL_mask = [False, False, True, True, True, True, True, True, False, False]
+robot_chain = Chain.from_urdf_file("ur5e.urdf",active_links_mask = AL_mask)
+#Print the chain to verify the correct links are included
 #print(robot_chain)
 
 #define basic time step
 timestep = int(supervisor.getBasicTimeStep())
+reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
+
+
 
 #get Robot 
 robot_node = supervisor.getFromDef('Robot') 
@@ -55,37 +59,43 @@ def get_forward_kinematics(angles):
     return(robotTipMatrix)
 
 def check_crash():
-    # Check for contact points
+        # Check for contact points
+    robot_node = supervisor.getFromDef('Robot') 
+
+    table = supervisor.getFromDef('Table')
     contact_robot = robot_node.getContactPoints(includeDescendants=True)
     contact_table = table.getContactPoints(includeDescendants = True)
+    
     crashed = False
+    
     if contact_table: 
-        #print("table crash")
         crashed = True
     if contact_robot: 
-        #print("robot crash")
         crashed = True
+        
     return crashed
     
 
 def reset_sim():
     supervisor.simulationReset()
+    supervisor.simulationResetPhysics()
+    move_robot(reset_pose) 
+    robot_node = supervisor.getFromDef('Robot') 
+    #print("contat in reset: ", contact_robot)
     pass
 
 def move_robot(angles):
     crashed = False
     sensors= np.zeros(6)        
     start_time = time.time()
-    
     while True: 
         supervisor.step(timestep)
         current_pos = get_motor_pos()
         crashed = check_crash()
-        if check_crash() == True: 
+        if crashed == True: 
             break
         
         if all (abs(current_pos-angles) <= 0.01): 
-            #print("moved")
             break
         
         for n, motor in enumerate(motors):
@@ -97,7 +107,7 @@ def move_robot(angles):
         
         # Check for timeout
         if time.time() - start_time > 5:
-            print("Warning: Motor movement timeout!")
+            print("Motor movement timeout, stucked!")        
             break
         time.sleep(0.01)
     
