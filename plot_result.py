@@ -16,10 +16,10 @@ def plot_monitor_data(file_path):
 
     # filter for episode lengths
     X = epochs.reshape(-1, 1)  # Reshape for sklearn
-    y_epF = uniform_filter1d(episode_lengths,20)
+    y_epF = uniform_filter1d(episode_lengths,40)
     
     # filter for rewards
-    y_rewards_f = uniform_filter1d(rewards,20)
+    y_rewards_f = uniform_filter1d(rewards,40)
     
 
     # Create the subplots
