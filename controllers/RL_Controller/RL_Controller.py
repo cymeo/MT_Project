@@ -8,21 +8,22 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3.common.vec_env import DummyVecEnv
 
+
 env = W_Env()
 #check_env(env, warn = False)
 #print("environment checked")
-
 env = Monitor(env, filename=f"monitor_logs/env_00") 
 env = DummyVecEnv([lambda: env])
+
 #model = SAC(policy = "MultiInputPolicy", env= env)                                 
 #model= SAC("SAC0.zip")
 model = PPO(policy = "MultiInputPolicy", env= env, n_steps= 512 )
-print("model loaded")
+#print("model loaded")
 obs = env.reset()
  
 steps = 500
 episodes = 5000
-model.learn(total_timesteps= episodes*steps, tb_log_name= "SAC_log")   
+model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log")   
 model.save("ppo0")
 
 print('start test')

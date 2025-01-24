@@ -12,7 +12,7 @@ class WeBot_environment(Env):
     def __init__(self):
         
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([1,0.0,300,300]) 
+        self.weights = np.array([1,0.0,200,300]) 
         
         super().__init__()
         # Define action and observation space
