@@ -12,12 +12,12 @@ class WeBot_environment(Env):
     def __init__(self):
         
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([1,0.0,200,300]) 
+        self.weights = np.array([1,0.0,500,300]) 
         
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
-        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
+        self.action_space = spaces.Box(low= -np.pi/5, high = np.pi/5, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
         self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
         self.observation_space = spaces.Dict(

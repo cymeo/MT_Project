@@ -9,49 +9,65 @@ def plot_monitor_data(file_path):
 
     # Extract rewards and episode lengths (steps)
     rewards = data['r']
-    episode_lengths = data['l']
+    steps = data['l']
 
     # Calculate the epochs
     epochs = np.arange(len(rewards))
 
     # filter for episode lengths
     X = epochs.reshape(-1, 1)  # Reshape for sklearn
-    y_epF = uniform_filter1d(episode_lengths,40)
+    y_epF = uniform_filter1d(steps,40)
     
     # filter for rewards
     y_rewards_f = uniform_filter1d(rewards,40)
     
 
     # Create the subplots
-    fig, axs = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+    fig, axs = plt.subplots(2, 2, figsize=(10, 8), sharex=True)
 
     # Plot rewards
-    axs[0].scatter(epochs, rewards, label='Rewards', color='blue')
-    axs[0].plot(epochs, y_rewards_f, label='filtered', color='red', linewidth=2)
-    axs[0].set_title('Rewards per Epoch')
-    axs[0].set_ylabel('Rewards')
-    axs[0].legend()
-    axs[0].grid()
+    axs[0, 0].scatter(epochs, rewards, label='Rewards', color='blue')
+    axs[0, 0].plot(epochs, y_rewards_f, label='filtered', color='red', linewidth=2)
+    axs[0, 0].set_title('Rewards per Epoch')
+    axs[0, 0].set_ylabel('Rewards')
+    axs[0, 0].legend()
+    axs[0, 0].grid()
 
     # Plot steps (episode lengths) with linear regression
-    axs[1].scatter(epochs, episode_lengths, label='Steps', color='green', alpha=0.7)
-    axs[1].plot(epochs, y_epF, label='filtered', color='red', linewidth=2)
+    axs[1, 0].scatter(epochs, steps, label='Steps', color='blue', alpha=0.7)
+    axs[1, 0].plot(epochs, y_epF, label='filtered', color='red', linewidth=2)
+    axs[1, 0].set_title('Steps per Epoch')
+    axs[1, 0].set_xlabel('Epochs')
+    axs[1, 0].set_ylabel('Steps')
+    axs[1, 0].legend()
+    axs[1, 0].grid()
     
-    axs[1].set_title('Steps per Epoch')
-    axs[1].set_xlabel('Epochs')
-    axs[1].set_ylabel('Steps')
-    axs[1].legend()
-
-    axs[1].grid()
+    window_size = 100  
+    # Moving window count of crashes (reward <= -300)
+    crash_count = np.convolve(rewards <= -300, np.ones(window_size, dtype=int), mode='valid')
+    success_count = np.convolve(rewards > 0, np.ones(window_size, dtype=int), mode='valid')
+    axs[0, 1].plot(crash_count, label='crash', color='red', linewidth=2)
+    axs[0, 1].plot(success_count, label='success', color='green', linewidth=2)
+    axs[0, 1].set_title('crashes & successes per 100 epochs')
+    axs[0, 1].set_xlabel('Epochs')
+    axs[0, 1].set_ylabel('Steps')
+    axs[0, 1].legend()
+    axs[0, 1].grid()
     
+    filtered_steps = steps[rewards >= -300]
+    filtered_steps_average = uniform_filter1d(filtered_steps,50)
+    axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='filtered', color='blue', alpha = 0.5)
+    axs[1, 1].plot(epochs[:len(filtered_steps)], filtered_steps_average, label='filtered', color='red', linewidth=2)
+    axs[1, 1].set_title('Steps per Epoch excluding crashes')
+    axs[1, 1].set_xlabel('Epochs')
+    axs[1, 1].set_ylabel('Steps')
+    axs[1, 1].legend()
+    axs[1, 1].grid()    
+       
     # Adjust layout and show the plot
     plt.tight_layout()
-    plt.show()
+    plt.show()    
+    print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
 plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controller/monitor_logs/env_00.monitor.csv')
-
-
-
-
-

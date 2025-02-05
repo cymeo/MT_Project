@@ -1,5 +1,5 @@
 """controller_test controller."""
-from controller import Robot, Supervisor,Connector
+from controller import Robot, Supervisor
 from ikpy.chain import Chain
 import numpy as np
 from scipy.spatial.transform import Rotation as R
