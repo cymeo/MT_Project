@@ -2,7 +2,7 @@ import From_Webot as FW
 from Environment import WeBot_environment as W_Env
 import torch
 print(torch.cuda.is_available())  # Should return True if GPU is available
-print(torch.cuda.device_name(0))  # Show GPU name if available
+print(torch.cuda.get_device_name(0))  # Show GPU name if available
 
 # for training
 from stable_baselines3 import PPO   
@@ -15,11 +15,12 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 env = W_Env()
 #check_env(env, warn = False)
 #print("environment checked")
-env = Monitor(env, filename=f"monitor_logs/env_00") 
+env = Monitor(env, filename=f"monitor_logs/env_01") 
 env = DummyVecEnv([lambda: env])
 
 #model = SAC(policy = "MultiInputPolicy", env= env)                                 
 #model= SAC("SAC0.zip")
+print("PPO on cuda")
 model = PPO(
     policy = "MultiInputPolicy", 
     env= env, 
@@ -33,10 +34,10 @@ model = PPO(
 #print("model loaded")
 obs = env.reset()
  
-steps = 200
+steps = 350
 episodes = 5000
-model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log")   
-model.save("ppo0")
+model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log1")   
+model.save("ppo1")
 
 print('start test')
 successnumber = 0

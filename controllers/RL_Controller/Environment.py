@@ -17,7 +17,7 @@ class WeBot_environment(Env):
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
-        self.action_space = spaces.Box(low= -np.pi/5, high = np.pi/5, shape = (6,))
+        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
         self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
         self.observation_space = spaces.Dict(
@@ -67,6 +67,8 @@ class WeBot_environment(Env):
         self.current_step = 0
         self.theta = np.zeros(6)
         self.goal = np.array([0.3,0.2,0.3])
+        self.dist = 1
+        self.prev_dist = 1 
         
         self.crashed = False
         self.done = False
@@ -106,9 +108,9 @@ class WeBot_environment(Env):
    #returne done and if successed 
     def check_done(self):
         
-        dist, rot_dist = self.get_distance()
+        self.dist, self.rot_dist = self.get_distance()
         #sucess
-        if (dist <= 0.05):
+        if (self.dist <= 0.05):
             success = True
             print(success)
             return True, True
@@ -128,8 +130,8 @@ class WeBot_environment(Env):
         R_dist= 0 ## distance to goal
         R_rot_dist = 0 
         self.done, success  = self.check_done()
-        dist, rot_dist = self.get_distance()
-        R_dist = dist**2
+        self.dist, rot_dist = self.get_distance()
+        R_dist = self.dist     
         R_rot_dist = rot_dist
     
         if success: 
@@ -143,10 +145,7 @@ class WeBot_environment(Env):
             self.weights[2]*R_success + 
             -self.weights[3]*R_fail) 
             #- self.weights[4]*R_crash)   
-
-        #print("reward", total_reward)       
-        
-        
+        #print("reward", total_reward)               
         return total_reward
 
     def step(self, action):
