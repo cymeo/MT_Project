@@ -16,17 +16,17 @@ def plot_monitor_data(file_path):
 
     # filter for episode lengths
     X = epochs.reshape(-1, 1)  # Reshape for sklearn
-    y_epF = uniform_filter1d(steps,40)
+    y_epF = uniform_filter1d(steps,50)
     
     # filter for rewards
-    y_rewards_f = uniform_filter1d(rewards,40)
+    y_rewards_f = uniform_filter1d(rewards,50)
     
     # Create the subplots
     fig, axs = plt.subplots(2, 2, figsize=(10, 8), sharex=True)
 
     # Plot rewards
     axs[0, 0].scatter(epochs, rewards, label='Rewards', color='blue')
-    axs[0, 0].plot(epochs, y_rewards_f, label='filtered', color='red', linewidth=2)
+    axs[0, 0].plot(epochs, y_rewards_f, label='Moving Average 50', color='red', linewidth=2)
     axs[0, 0].set_title('Rewards per Epoch')
     axs[0, 0].set_ylabel('Rewards')
     axs[0, 0].legend(loc='upper left', bbox_to_anchor=(1, 1))
@@ -59,8 +59,8 @@ def plot_monitor_data(file_path):
     
     filtered_steps = steps[rewards >= -300]
     filtered_steps_average = uniform_filter1d(filtered_steps,50)
-    axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='filtered', color='blue', alpha = 0.5)
-    axs[1, 1].plot(epochs[:len(filtered_steps)], filtered_steps_average, label='filtered', color='red', linewidth=2)
+    axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='number of steps', color='blue', alpha = 0.5)
+    axs[1, 1].plot(epochs[:len(filtered_steps)], filtered_steps_average, label='moving average 50', color='red', linewidth=2)
     axs[1, 1].set_title('Steps per Epoch excluding crashes')
     axs[1, 1].set_xlabel('Epochs')
     axs[1, 1].set_ylabel('Steps')
