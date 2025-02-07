@@ -57,7 +57,7 @@ def plot_monitor_data(file_path):
     axs[0, 1].legend(loc='upper left', bbox_to_anchor=(1, 1))
     axs[0, 1].grid()
     
-    filtered_steps = steps[rewards >= -300]
+    filtered_steps = steps[rewards > 0]
     filtered_steps_average = uniform_filter1d(filtered_steps,50)
     axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='number of steps', color='blue', alpha = 0.5)
     axs[1, 1].plot(epochs[:len(filtered_steps)], filtered_steps_average, label='moving average 50', color='red', linewidth=2)
@@ -74,5 +74,7 @@ def plot_monitor_data(file_path):
 
 # Example usage
 plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controller/monitor_logs/env_01.monitor.csv')
+
+
 
 
