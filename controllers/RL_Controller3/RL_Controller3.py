@@ -1,5 +1,5 @@
-import From_Webot2 as FW
-from Environment2 import WeBot_environment as W_Env
+import From_Webot3 as FW
+from Environment3 import WeBot_environment as W_Env
 import torch
 print(torch.cuda.is_available())  # Should return True if GPU is available
 print(torch.cuda.get_device_name(0))  # Show GPU name if available
@@ -14,7 +14,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 env = W_Env()
 #check_env(env, warn = False)
 #print("environment checked")
-env = Monitor(env, filename=f"env_02") 
+env = Monitor(env, filename=f"env_03") 
 env = DummyVecEnv([lambda: env])
 
 #model = SAC(policy = "MultiInputPolicy", env= env)                                 

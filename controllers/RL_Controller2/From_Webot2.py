@@ -109,7 +109,7 @@ def move_robot(angles):
         if time.time() - start_time > 5:
             print("Motor movement timeout, stucked!")        
             break
-        time.sleep(0.01)
+        time.sleep(0.001)
     
     return sensors, crashed
 

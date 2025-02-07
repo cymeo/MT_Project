@@ -34,7 +34,7 @@ def plot_monitor_data(file_path):
 
     # Plot steps (episode lengths) with linear regression
     axs[1, 0].scatter(epochs, steps, label='Steps', color='blue', alpha=0.7)
-    axs[1, 0].plot(epochs, y_epF, label='filtered', color='red', linewidth=2)
+    axs[1, 0].plot(epochs, y_epF, label='moving Average  50 ', color='red', linewidth=2)
     axs[1, 0].set_title('Steps per Epoch')
     axs[1, 0].set_xlabel('Epochs')
     axs[1, 0].set_ylabel('Steps')
@@ -61,7 +61,7 @@ def plot_monitor_data(file_path):
     filtered_steps_average = uniform_filter1d(filtered_steps,50)
     axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='number of steps', color='blue', alpha = 0.5)
     axs[1, 1].plot(epochs[:len(filtered_steps)], filtered_steps_average, label='moving average 50', color='red', linewidth=2)
-    axs[1, 1].set_title('Steps per Epoch excluding crashes')
+    axs[1, 1].set_title('Steps per successed Epoch')
     axs[1, 1].set_xlabel('Epochs')
     axs[1, 1].set_ylabel('Steps')
     axs[1, 1].legend(loc='upper left', bbox_to_anchor=(1, 1))
@@ -73,7 +73,10 @@ def plot_monitor_data(file_path):
     print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
-plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controller/monitor_logs/env_01.monitor.csv')
+plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controller/monitor_logs/env_00.monitor.csv')
+
+
+
 
 
 
