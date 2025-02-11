@@ -30,6 +30,7 @@ table = supervisor.getFromDef('Table')
 
 
 def get_dist(): 
+    arm.getPosition()
     pass       
         
 #get motors

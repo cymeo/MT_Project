@@ -26,7 +26,7 @@ reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
 robot_node = supervisor.getFromDef('Robot') 
 box = supervisor.getFromDef('Box')
 arm = supervisor.getFromDef('Arm')
-table = supervisor.getFromDef('Table')
+#table = supervisor.getFromDef('Table')
 
 
 def get_dist(): 
@@ -62,14 +62,14 @@ def check_crash():
         # Check for contact points
     robot_node = supervisor.getFromDef('Robot') 
 
-    table = supervisor.getFromDef('Table')
+    #table = supervisor.getFromDef('Table')
     contact_robot = robot_node.getContactPoints(includeDescendants=True)
-    contact_table = table.getContactPoints(includeDescendants = True)
+    #contact_table = table.getContactPoints(includeDescendants = True)
     
     crashed = False
     
-    if contact_table: 
-        crashed = True
+    #if contact_table: 
+       # crashed = True
     if contact_robot: 
         crashed = True
         

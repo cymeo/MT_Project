@@ -11,13 +11,15 @@ class WeBot_environment(Env):
 
     def __init__(self):
         
-        ######### rewards for -distance to goal,-rotational_distance, success, crash -max_steps ############
-        self.weights = np.array([1,0.0,500,500,300]) 
+        ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
+        self.weights = np.array([1,0.0,200,200]) 
+        self.action = np.zeros(6)
+        self.max_step = 1000
         
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
-        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (3,))
+        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
         self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
         self.observation_space = spaces.Dict(
@@ -37,30 +39,16 @@ class WeBot_environment(Env):
                         low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
                         high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
                         dtype = float
-                    )
-                
-                #,
-                # "P_Arm":spaces.Box(
-                #     low = np.array([-100,-100,-100,-np.pi,-np.pi,-np.pi]),
-                #     high =np.array([100,100,100,np.py,np.py,np.py]), 
-                #     dtype = float    
-                # ),
-                # "V_Arm":spaces.Box( # in m/sec
-                #     low = np.array([-1,-1,-1,-np.pi,-np.pi,-np.pi]),
-                #     high =np.array([1,1,1,np.py,np.py,np.py]), 
-                #     dtype = float    
-                # ), 
-                # "D_Arm2Link":spaces.Box(
-                #     low = np.array([-200,-200,-200,-np.pi,-np.pi,-np.pi]),
-                #     high =np.array([200,200,200,np.py,np.py,np.py]), 
-                #     dtype = float    
-                # )                                                                 
+                    ),
+                "stepnumber": spaces.Box(low = 0 , high = 500, dtype= int),
+                "d_goal": spaces.Box(0,2,dtype=float),
+                "d_goal_rel": spaces.Box(
+                    low = np.array([-2,-2,-2]),
+                    high =np.array([2,2,2]), 
+                    dtype = float
+                    )                                                    
             }
         )
-
-        self.action = np.zeros(6)
-        self.timestep = 0
-        self.max_step = 400        
         
         #further Parameters
         self.current_step = 0
@@ -68,7 +56,7 @@ class WeBot_environment(Env):
         self.goal = np.array([0.3,0.2,0.3])
         self.dist = 1
         self.prev_dist = 1 
-        self.rot_dist = 1
+        
         self.crashed = False
         self.done = False
 
@@ -83,11 +71,15 @@ class WeBot_environment(Env):
         rot_quat= np.array(rot.as_quat())
         #print("transl: ", transl, "   rot: ", rot_quat)
         self.p_end = np.concatenate((transl,rot_quat))
+        self.dist, self.rot_dist = self.get_distance()
 
         observation = { 
             "goal": self.goal,
             "p_end": self.p_end, 
-            "theta": self.theta
+            "theta": self.theta, 
+            "stepnumber": self.current_step,
+            "d_goal": self.dist,
+            "d_goal_rel": np.subtract(self.goal, self.p_end[:3])
         }
         
         return observation
@@ -105,9 +97,8 @@ class WeBot_environment(Env):
         return dist, np.absolute(rot_dist)
    
    #returne done and if successed 
-    def check_done(self):
-        
-        self.dist, self.rot_dist = self.get_distance()
+    def check_done(self):     
+
         #sucess
         if (self.dist <= 0.05):
             success = True
@@ -125,41 +116,37 @@ class WeBot_environment(Env):
         
     def get_reward(self): 
         R_success = 0 
-        R_crash = 0 
+        R_fail = 0 
         R_dist= 0 ## distance to goal
         R_rot_dist = 0 
-        R_overstepped = 0 
         self.done, success  = self.check_done()
-        #self.dist, rot_dist = self.get_distance()
-        R_dist = self.prev_dist - self.dist   
+        R_dist = self.dist     
         R_rot_dist = self.rot_dist
-        #print(R_dist)
-        self.prev_dist = self.dist
     
         if success: 
-           R_success = 1  
+           if self.current_step == 0: 
+               R_success = 1000
+           else:
+               R_success = 1/self.current_step 
+           
         if self.crashed: 
-            R_crash = 1
-        if self.done and not success: 
-            R_overstepped = 1 
+            R_fail = 1
  
         total_reward = (
             -self.weights[0]*R_dist + 
             -self.weights[1]*R_rot_dist + 
             self.weights[2]*R_success + 
-            -self.weights[3]*R_crash+ 
-            -self.weights[4]*R_overstepped)   
-        #print("reward", total_reward)
-        self.prev_dist             
+            -self.weights[3]*R_fail) 
+            #- self.weights[4]*R_crash)   
+        #print("reward", total_reward)               
         return total_reward
 
     def step(self, action):
+
         self.current_step += 1 
-        action = np.array([action[0],action[1],action[2],0,0,0])
         new_theta = np.clip((self.theta+action), -2*np.pi, 2*np.pi)
-        new_theta[2] = np.clip(new_theta[2], 0, np.pi)
+        new_theta[2] = np.clip(new_theta[2], -np.pi, np.pi)
         new_theta[1] = np.clip(new_theta[1],-np.pi/2,0)
-        new_theta = np.array([new_theta[0],new_theta[1],new_theta[2],-np.pi/2,-np.pi/2,0])
         #print("new_theta",new_theta)
         self.theta, self.crashed = FW.move_robot(new_theta) 
         
@@ -177,9 +164,9 @@ class WeBot_environment(Env):
         FW.reset_sim()
         #time.sleep(0.1)
         # new goal_pos
-        rand_x = np.random.uniform(0.2, 0.6) 
+        rand_x = np.random.uniform(0.1, 0.6) 
         rand_y = np.random.uniform(-0.5, 0.5)
-        rand_z = 0.1#np.random.uniform(0.05,0.5)    
+        rand_z = np.random.uniform(0.05,0.5)    
         self.goal = np.array([rand_x,rand_y,rand_z])
         #self.goal = np.array([0.5,0.1, 0.2 ])    
         FW.show_goal(self.goal)
@@ -189,7 +176,7 @@ class WeBot_environment(Env):
         self.done = False 
         self.current_step = 0
         observation = self.get_observation()
-        info = {} 
+        info = {}
         
         return observation, info
 

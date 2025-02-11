@@ -12,7 +12,7 @@ class WeBot_environment(Env):
     def __init__(self):
         
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([1,0.0,500,300]) 
+        self.weights = np.array([2,0.0,100,200]) 
         
         super().__init__()
         # Define action and observation space
@@ -37,32 +37,21 @@ class WeBot_environment(Env):
                         low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
                         high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
                         dtype = float
-                    )
-                
-                #,
-                # "P_Arm":spaces.Box(
-                #     low = np.array([-100,-100,-100,-np.pi,-np.pi,-np.pi]),
-                #     high =np.array([100,100,100,np.py,np.py,np.py]), 
-                #     dtype = float    
-                # ),
-                # "V_Arm":spaces.Box( # in m/sec
-                #     low = np.array([-1,-1,-1,-np.pi,-np.pi,-np.pi]),
-                #     high =np.array([1,1,1,np.py,np.py,np.py]), 
-                #     dtype = float    
-                # ), 
-                # "D_Arm2Link":spaces.Box(
-                #     low = np.array([-200,-200,-200,-np.pi,-np.pi,-np.pi]),
-                #     high =np.array([200,200,200,np.py,np.py,np.py]), 
-                #     dtype = float    
-                # )                                                                 
+                    ),
+                #"stepnumber": spaces.Box(low = 0 , high = 500, dtype= int),
+                "d_goal": spaces.Box(0,2,dtype=float),
+                "d_goal_rel": spaces.Box(
+                    low = np.array([-2,-2,-2]),
+                    high =np.array([2,2,2]), 
+                    dtype = float
+                    )                                                    
             }
         )
 
         self.action = np.zeros(6)
         self.timestep = 0
-        self.max_step = 500
-        
-        
+        self.max_step = 100
+
         #further Parameters
         self.current_step = 0
         self.theta = np.zeros(6)
@@ -84,11 +73,15 @@ class WeBot_environment(Env):
         rot_quat= np.array(rot.as_quat())
         #print("transl: ", transl, "   rot: ", rot_quat)
         self.p_end = np.concatenate((transl,rot_quat))
+        self.dist, self.rot_dist = self.get_distance()
 
         observation = { 
             "goal": self.goal,
             "p_end": self.p_end, 
-            "theta": self.theta
+            "theta": self.theta, 
+            #"stepnumber": self.stepnumber,
+            "d_goal": self.dist,
+            "d_goal_rel": np.subtract(self.goal, self.p_end[:3])
         }
         
         return observation
@@ -106,9 +99,8 @@ class WeBot_environment(Env):
         return dist, np.absolute(rot_dist)
    
    #returne done and if successed 
-    def check_done(self):
-        
-        self.dist, self.rot_dist = self.get_distance()
+    def check_done(self):     
+
         #sucess
         if (self.dist <= 0.05):
             success = True
@@ -130,9 +122,8 @@ class WeBot_environment(Env):
         R_dist= 0 ## distance to goal
         R_rot_dist = 0 
         self.done, success  = self.check_done()
-        self.dist, rot_dist = self.get_distance()
         R_dist = self.dist     
-        R_rot_dist = rot_dist
+        R_rot_dist = self.rot_dist
     
         if success: 
            R_success = 1  

@@ -19,7 +19,7 @@ env = DummyVecEnv([lambda: env])
 
 #model = SAC(policy = "MultiInputPolicy", env= env)                                 
 #model= SAC("SAC0.zip")
-print("PPO on cuda")
+print("PPO2 on cuda")
 model = PPO(
     policy = "MultiInputPolicy", 
     env= env, 
@@ -27,7 +27,7 @@ model = PPO(
     batch_size=1024,
     learning_rate= 3e-4,  
     n_steps= 2048,
-    )
+)
 
 #model = PPO.load('ppo_RP300')
 #print("model loaded")
@@ -47,7 +47,7 @@ for episode in range(100):
         action,_ = model.predict(obs, deterministic=False)
         #print(env.step(action))
         obs, reward, done, truncated = env.step(action)        
-        if reward >= 0: 
+        if reward >= 50: 
             successnumber +=1  
             break
         if done: 
