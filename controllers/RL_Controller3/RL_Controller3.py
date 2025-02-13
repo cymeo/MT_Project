@@ -41,12 +41,12 @@ model.set_env(env)  # Set environment
 print("model loaded")
 obs = env.reset()
 steps = 50
-episodes = 10000
+episodes = 20000
 
 checkpoint_callback = CheckpointCallback(save_freq=1000*steps, save_path="./models/", name_prefix="ppo3_1")
 
-model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log3")   
-model.save("ppo3_1")
+model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log3", callback=checkpoint_callback)   
+model.save("ppo3_2")
 
 print('start test')
 
