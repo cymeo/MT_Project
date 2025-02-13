@@ -1,5 +1,5 @@
 """controller_test controller."""
-from controller import Robot, Supervisor
+from controller import Supervisor
 from ikpy.chain import Chain
 import numpy as np
 from scipy.spatial.transform import Rotation as R
@@ -20,7 +20,7 @@ robot_chain = Chain.from_urdf_file("ur5e.urdf",active_links_mask = AL_mask)
 timestep = int(supervisor.getBasicTimeStep())
 reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
 
-
+robot_tippose = np.array([0,0,0])
 
 #get Robot 
 robot_node = supervisor.getFromDef('Robot') 
@@ -29,9 +29,9 @@ arm = supervisor.getFromDef('Arm')
 table = supervisor.getFromDef('Table')
 
 
-def get_dist(): 
-    arm.getPosition()
-    pass       
+def get_Arm(): 
+    arm_pos = arm.getPosition()
+    return arm_pos       
         
 #get motors
 motors = []
@@ -56,7 +56,7 @@ def get_forward_kinematics(angles):
     #print(angles_trans)
     robotTipMatrix = robot_chain.forward_kinematics(angles_trans)
     #rotationrot = robotTipMatrix[:3,:3]
-    # transpose = robotTipMAtrix[3,:3]
+    robot_tippose = robotTipMatrix[3,:3]
     return(robotTipMatrix)
 
 def check_crash():

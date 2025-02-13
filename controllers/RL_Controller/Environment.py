@@ -12,7 +12,8 @@ class WeBot_environment(Env):
     def __init__(self):
         
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([2,0.0,100,200]) 
+        self.weights = np.array([2,0.0,25,100]) 
+        self.max_step = 35
         
         super().__init__()
         # Define action and observation space
@@ -50,7 +51,7 @@ class WeBot_environment(Env):
 
         self.action = np.zeros(6)
         self.timestep = 0
-        self.max_step = 100
+
 
         #further Parameters
         self.current_step = 0
@@ -104,7 +105,7 @@ class WeBot_environment(Env):
         #sucess
         if (self.dist <= 0.05):
             success = True
-            print(success)
+            print('success')
             return True, True
         # step mlimit reached           
         if (self.current_step >= self.max_step):
@@ -129,6 +130,8 @@ class WeBot_environment(Env):
            R_success = 1  
         if self.crashed: 
             R_fail = 1
+        if self.done and (not success):
+            R_fail = 1
  
         total_reward = (
             -self.weights[0]*R_dist + 
@@ -149,7 +152,7 @@ class WeBot_environment(Env):
         self.theta, self.crashed = FW.move_robot(new_theta) 
         
         observation = self.get_observation()
-        self.done, _ = self.check_done()
+        #self.done, _ = self.check_done()
         reward = self.get_reward()
 
         truncated = False

@@ -6,17 +6,16 @@ from gymnasium import spaces
 from scipy.spatial.transform import Rotation as R
 import time
 
-
 class WeBot_environment(Env):
     """Custom Environment that follows gym interface."""
 
     def __init__(self):
-        
-        ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([2,0.0,400,400]) 
-        
+                
         super().__init__()
         # Define action and observation space
+         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
+        self.weights = np.array([2,0.0,30,200]) 
+        self.max_step = 50
         #action = Motorangle steps  
         self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
@@ -45,21 +44,30 @@ class WeBot_environment(Env):
                     low = np.array([-2,-2,-2]),
                     high =np.array([2,2,2]), 
                     dtype = float
-                    )                                                    
+                    ),
+                "p_arm": spaces.Box(
+                    low = np.array([0,0,0]),
+                    high =np.array([2,2,2]), 
+                    dtype = float
+                    ),  
+                "d_arm": spaces.Box(0,2,dtype=float),
+                "d_arm_rel": spaces.Box(
+                    low = np.array([-2,-2,-2]),
+                    high =np.array([2,2,2]), 
+                    dtype = float
+                    ),                                    
             }
         )
 
         self.action = np.zeros(6)
         self.timestep = 0
-        self.max_step = 1000
-        
-        
         #further Parameters
         self.current_step = 0
         self.theta = np.zeros(6)
         self.goal = np.array([0.3,0.2,0.3])
         self.dist = 1
         self.prev_dist = 1 
+        self.p_arm = np.array([])
         
         self.crashed = False
         self.done = False
@@ -76,16 +84,19 @@ class WeBot_environment(Env):
         #print("transl: ", transl, "   rot: ", rot_quat)
         self.p_end = np.concatenate((transl,rot_quat))
         self.dist, self.rot_dist = self.get_distance()
+        self.p_arm  = FW.get_Arm()
+        self.d_arm = np.linalg.norm(self.p_arm - self.p_end[:3])
 
         observation = { 
             "goal": self.goal,
             "p_end": self.p_end, 
             "theta": self.theta, 
-            #"stepnumber": self.stepnumber,
             "d_goal": self.dist,
-            "d_goal_rel": np.subtract(self.goal, self.p_end[:3])
+            "d_goal_rel": np.subtract(self.goal, self.p_end[:3]),
+            "p_arm": self.p_arm,
+            "d_arm": self.d_arm,
+            "d_arm_rel": np.subtract(self.p_arm, self.p_end[:3])
         }
-        
         return observation
 
     def get_distance(self):
@@ -106,7 +117,7 @@ class WeBot_environment(Env):
         #sucess
         if (self.dist <= 0.05):
             success = True
-            print(success)
+            print('success')
             return True, True
         # step mlimit reached           
         if (self.current_step >= self.max_step):
@@ -151,7 +162,7 @@ class WeBot_environment(Env):
         self.theta, self.crashed = FW.move_robot(new_theta) 
         
         observation = self.get_observation()
-        self.done, _ = self.check_done()
+        #self.done, _ = self.check_done()
         reward = self.get_reward()
 
         truncated = False
@@ -164,7 +175,7 @@ class WeBot_environment(Env):
         FW.reset_sim()
         #time.sleep(0.1)
         # new goal_pos
-        rand_x = np.random.uniform(0.1, 0.6) 
+        rand_x = np.random.uniform(0.3, 0.7) 
         rand_y = np.random.uniform(-0.5, 0.5)
         rand_z = np.random.uniform(0.05,0.5)    
         self.goal = np.array([rand_x,rand_y,rand_z])

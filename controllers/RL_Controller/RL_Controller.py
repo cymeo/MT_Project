@@ -15,11 +15,9 @@ import numpy as np
 env = W_Env()
 #check_env(env, warn = False)
 #print("environment checked")
-env = Monitor(env, filename=f"monitor_logs/env_01.2") 
+env = Monitor(env, filename=f"monitor_logs/env_01_2") 
 env = DummyVecEnv([lambda: env])
 
-#model = SAC(policy = "MultiInputPolicy", env= env)                                 
-#model= SAC("SAC0.zip")
 print("PPO on cuda")
 # model = PPO(
 #     policy = "MultiInputPolicy", 
@@ -29,20 +27,19 @@ print("PPO on cuda")
 #     learning_rate= 3e-4,  
 #     n_steps= 2048,
 #     )
-model = PPO.load('ppo1')
+model = PPO.load('ppo1_1')
 model.set_env(env)  # Set environment
 
-#model = PPO.load('ppo_RP300')
 print("model loaded")
 obs = env.reset()
-steps = 350
-episodes = 7000
-model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log1.1")   
-model.save("ppo1.1")
+steps = 50
+episodes = 10000
+model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log1_1")   
+model.save("ppo1_1")
 
 print('start test')
-successed = []
-steps_per_Episodes = []
+successed = np.array([])
+steps_per_Episodes = np.array([])
 for episode in range(100):
     done = False
     steps = 0
@@ -56,7 +53,7 @@ for episode in range(100):
             
             break
         if done: 
-            successed(0)
+            successed.append(0)
             break
         steps +=1
     obs = env.reset()
