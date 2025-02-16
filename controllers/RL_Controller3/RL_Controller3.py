@@ -16,37 +16,37 @@ import numpy as np
 env = W_Env()
 #check_env(env, warn = False)
 #print("environment checked")
-env = Monitor(env, filename=f"monitor_logs/env_01.2") 
+env = Monitor(env, filename=f"monitor_logs/env_03") 
 env = DummyVecEnv([lambda: env])
 
 #model = SAC(policy = "MultiInputPolicy", env= env)                                 
 #model= SAC("SAC0.zip")
 print("PPO on cuda")
-# model = PPO(
-#     policy = "MultiInputPolicy", 
-#     env= env, 
-#     device="cuda",
-#     batch_size=1024,
-#     learning_rate= 3e-4,  
-#     n_steps= 2048,
-#      )
+model = PPO(
+    policy = "MultiInputPolicy", 
+    env= env, 
+    device="cuda",
+    batch_size=1024,
+    learning_rate= 3e-4,  
+    n_steps= 2048,
+     )
 
 
 #model = PPO.load('ppo1')
 #model.set_env(env)  # Set environment
 
-model = PPO.load('ppo3_1')
-model.set_env(env)  # Set environment
+# model = PPO.load('ppo3')
+# model.set_env(env)  # Set environment
 
 print("model loaded")
 obs = env.reset()
-steps = 50
-episodes = 20000
+steps = 500
+episodes = 10000
 
-checkpoint_callback = CheckpointCallback(save_freq=1000*steps, save_path="./models/", name_prefix="ppo3_1")
+checkpoint_callback = CheckpointCallback(save_freq=1000*steps, save_path="./models/", name_prefix="ppo31_1")
 
-model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log3", callback=checkpoint_callback)   
-model.save("ppo3_2")
+model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log31", callback=checkpoint_callback)   
+model.save("ppo30")
 
 print('start test')
 
@@ -77,5 +77,5 @@ DF = pd.DataFrame({
     "success": np.array(successed),
     "steps":np.array(steps_per_Episodes)
     })
-DF.to_csv("test_results3")
+DF.to_csv("test_results32")
 

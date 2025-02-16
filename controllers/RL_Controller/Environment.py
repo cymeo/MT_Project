@@ -12,8 +12,8 @@ class WeBot_environment(Env):
     def __init__(self):
         
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([2,0.0,25,100]) 
-        self.max_step = 35
+        self.weights = np.array([2,0.0,400,400]) 
+        self.max_step = 700
         
         super().__init__()
         # Define action and observation space
@@ -80,7 +80,6 @@ class WeBot_environment(Env):
             "goal": self.goal,
             "p_end": self.p_end, 
             "theta": self.theta, 
-            #"stepnumber": self.stepnumber,
             "d_goal": self.dist,
             "d_goal_rel": np.subtract(self.goal, self.p_end[:3])
         }
@@ -130,8 +129,8 @@ class WeBot_environment(Env):
            R_success = 1  
         if self.crashed: 
             R_fail = 1
-        if self.done and (not success):
-            R_fail = 1
+        # if self.done and (not success):
+        #     R_fail = 1
  
         total_reward = (
             -self.weights[0]*R_dist + 
@@ -145,8 +144,9 @@ class WeBot_environment(Env):
     def step(self, action):
 
         self.current_step += 1 
-        new_theta = np.clip((self.theta+action), -2*np.pi, 2*np.pi)
-        new_theta[2] = np.clip(new_theta[2], -np.pi, np.pi)
+        #action = np.array([action[0],action[1],action[2], 0,0,0])
+        new_theta = np.clip((self.theta+action), -np.pi, np.pi)
+        #new_theta[2] = np.clip(new_theta[2], -np.pi, np.pi)
         new_theta[1] = np.clip(new_theta[1],-np.pi/2,0)
         #print("new_theta",new_theta)
         self.theta, self.crashed = FW.move_robot(new_theta) 
@@ -162,12 +162,17 @@ class WeBot_environment(Env):
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-        FW.reset_sim()
+        
+        #reset Initial pose:
         #time.sleep(0.1)
         # new goal_pos
+        if self.crashed: 
+            FW.reset_sim()
+        
+        
         rand_x = np.random.uniform(0.1, 0.6) 
         rand_y = np.random.uniform(-0.5, 0.5)
-        rand_z = np.random.uniform(0.05,0.5)    
+        rand_z = np.random.uniform(0.05,0.1)    
         self.goal = np.array([rand_x,rand_y,rand_z])
         #self.goal = np.array([0.5,0.1, 0.2 ])    
         FW.show_goal(self.goal)

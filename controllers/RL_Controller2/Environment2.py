@@ -1,4 +1,4 @@
-import From_Webot3 as FW
+import From_Webot2 as FW
 import gymnasium as gym
 from gymnasium import Env
 import numpy as np
@@ -14,10 +14,10 @@ class WeBot_environment(Env):
         super().__init__()
         # Define action and observation space
          ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([2,0.0,500,200]) 
-        self.max_step = 700
+        self.weights = np.array([2,0.0,50,200]) 
+        self.max_step = 100
         #action = Motorangle steps  
-        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (3,))
+        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
         self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
         self.observation_space = spaces.Dict(
@@ -59,7 +59,7 @@ class WeBot_environment(Env):
             }
         )
 
-        self.action = np.zeros(3)
+        self.action = np.zeros(6)
         self.timestep = 0
         #further Parameters
         self.current_step = 0
@@ -155,8 +155,7 @@ class WeBot_environment(Env):
     def step(self, action):
 
         self.current_step += 1 
-        action1 = np.array([action[0],action[1], action[2], 0,0,0] )
-        new_theta = np.clip((self.theta+action1), -2*np.pi, 2*np.pi)
+        new_theta = np.clip((self.theta+action), -2*np.pi, 2*np.pi)
         new_theta[2] = np.clip(new_theta[2], -np.pi, np.pi)
         new_theta[1] = np.clip(new_theta[1],-np.pi/2,0)
         #print("new_theta",new_theta)

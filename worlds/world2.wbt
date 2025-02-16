@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.1476227715024724 -0.016625006773751564 0.9889040026634041 4.181238875034745
-  position 21.91041575234532 38.078627246099344 11.005812761714004
+  orientation -0.1590011549630817 -0.014833431801568016 0.987166957521064 4.057236636609399
+  position 4.029619463515113 6.032461208236392 2.1629157093280194
 }
 TexturedBackground {
 }
@@ -311,7 +311,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.7246071203090953e-05
+              rotation 0 1 0 1.7246045452904943e-05
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -725,8 +725,6 @@ DEF Robot Robot {
                                           0 0.071 0
                                         ]
                                       }
-                                      linearVelocity -4.0009841117269937e-07 -7.51311989876641e-07 -3.0222802660761137e-07
-                                      angularVelocity -1.7684075245028918e-06 -1.1882744665027395e-06 1.0356035975325748e-06
                                     }
                                   }
                                 ]
@@ -761,8 +759,6 @@ DEF Robot Robot {
                                     0 0 0.1
                                   ]
                                 }
-                                linearVelocity -4.678930587537271e-07 -6.24046634802438e-07 -4.170201698488498e-07
-                                angularVelocity -8.282684919972939e-07 -6.152905107210594e-07 1.0582448622280947e-06
                               }
                             }
                           ]
@@ -797,8 +793,6 @@ DEF Robot Robot {
                               0 0.127 0
                             ]
                           }
-                          linearVelocity -3.140210367069685e-07 -6.686226644421078e-07 -3.9366970376097126e-07
-                          angularVelocity -8.05576391983042e-07 3.609540439444354e-08 1.743362432690688e-07
                         }
                       }
                     ]
@@ -854,8 +848,6 @@ DEF Robot Robot {
                         0 0 0.15
                       ]
                     }
-                    linearVelocity -1.1211705085736703e-07 -6.057482609208514e-07 -3.850856074925069e-07
-                    angularVelocity -6.157852622231252e-08 1.3550757699995042e-08 8.872008835167402e-08
                   }
                 }
               ]
@@ -899,8 +891,6 @@ DEF Robot Robot {
                   0 0 0.2125
                 ]
               }
-              linearVelocity 8.467190533215987e-09 -4.182937113894208e-07 -2.2365432157854214e-07
-              angularVelocity 7.209757538312247e-07 -9.732261385513031e-09 9.429121495128395e-08
             }
           }
         ]
@@ -934,8 +924,6 @@ DEF Robot Robot {
             0 -0.02561 0.00193
           ]
         }
-        linearVelocity 3.660993602633521e-08 1.2207447132126472e-08 -4.3442169015264504e-08
-        angularVelocity -1.051553807491611e-09 1.191167810050321e-08 2.2919937136138983e-08
       }
     }
   ]
@@ -950,6 +938,6 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "RL_Controller2"
+  controller "velocity_control"
   supervisor TRUE
 }
