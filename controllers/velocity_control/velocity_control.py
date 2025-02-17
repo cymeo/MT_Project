@@ -12,7 +12,6 @@ model = pin.buildModelFromUrdf('/home/cecily/MasterThesis_Cy/MT_Project/controll
 print("Model successfully loaded with", model.njoints, "joints")
 for frame in model.frames:
     print(frame.name)
-
 data = model.createData()
 
 # assign joint, motor and sensors
@@ -37,7 +36,7 @@ end_effector_name = "tool0"
 end_effector_id = model.getFrameId(end_effector_name)
 
 # Desired End-Effector Velocity (Linear + Angular)
-xdot = np.array([0.1, 0.0, 0.0, 0, 0, 0])  # Move along X-axis
+xdot = np.array([0, 0.0, -0.1, 0, 0, 0])  # Move along X-axis
 
 while True: 
     supervisor.step(timestep)
@@ -59,6 +58,7 @@ while True:
 
     # Compute Joint Velocities using Pseudoinverse
     qdot_command = np.linalg.pinv(J) @ xdot
+    
 
     # Apply Joint Velocities
     for i, motor in enumerate(motors):

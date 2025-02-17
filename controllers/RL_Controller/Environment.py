@@ -12,7 +12,7 @@ class WeBot_environment(Env):
     def __init__(self):
         
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([2,0.0,400,400]) 
+        self.weights = np.array([1,0.0,500,500]) 
         self.max_step = 700
         
         super().__init__()
@@ -166,13 +166,13 @@ class WeBot_environment(Env):
         #reset Initial pose:
         #time.sleep(0.1)
         # new goal_pos
-        if self.crashed: 
-            FW.reset_sim()
+        #if self.crashed: 
+        FW.reset_sim()
         
         
         rand_x = np.random.uniform(0.1, 0.6) 
         rand_y = np.random.uniform(-0.5, 0.5)
-        rand_z = np.random.uniform(0.05,0.1)    
+        rand_z = np.random.uniform(0.05,0.5)    
         self.goal = np.array([rand_x,rand_y,rand_z])
         #self.goal = np.array([0.5,0.1, 0.2 ])    
         FW.show_goal(self.goal)

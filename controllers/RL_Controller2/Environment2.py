@@ -16,46 +16,56 @@ class WeBot_environment(Env):
          ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
         self.weights = np.array([2,0.0,50,200]) 
         self.max_step = 100
-        #action = Motorangle steps  
-        self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (6,))
+        #action = end effector translational velocity 
+        self.action_space = spaces.Box(low= -0.5, high = 0.5, shape = (3))        
         #observation = Endeffector pose, motor angles, Goal Pose, 
         self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
         self.observation_space = spaces.Dict(
             {
-                "goal":spaces.Box(
-                    low = np.array([-1,-1,-1]),
-                    high =np.array([1,1,1]), 
-                    dtype = float    
-                ),
-            
-                "p_end": spaces.Box(
+                "p_end": spaces.Box( # end effector pose
                     low = np.array([-1.2,-1.2,-1.2, -1,-1,-1,-1]),
                     high =np.array([1.2,1.2,1.2, 1,1,1,1]), 
                     dtype = float
                     ), 
-                "theta": spaces.Box(
-                        low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
-                        high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
-                        dtype = float
-                    ),
-                #"stepnumber": spaces.Box(low = 0 , high = 500, dtype= int),
-                "d_goal": spaces.Box(0,2,dtype=float),
-                "d_goal_rel": spaces.Box(
+                "v_ee": spaces.Box( # end effector velocity 
+                    low = np.array([-1,-1,-1]),
+                    high = np.array([1,1,1]),
+                    dtype = float 
+                ),
+                
+                "goal":spaces.Box( # goal position 
+                    low = np.array([-1,-1,-1]),
+                    high =np.array([1,1,1]), 
+                    dtype = float    
+                ),
+                # "theta": spaces.Box( # robot joint poses
+                #         low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
+                #         high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
+                #         dtype = float
+                #     ),
+                "d_goal": spaces.Box(0,2,dtype=float), # absolute distance to goal 
+                "d_goal_rel": spaces.Box( # distance to goal 
                     low = np.array([-2,-2,-2]),
                     high =np.array([2,2,2]), 
                     dtype = float
                     ),
-                "p_arm": spaces.Box(
+                "p_arm": spaces.Box( # position of arm 
                     low = np.array([0,0,0]),
                     high =np.array([2,2,2]), 
                     dtype = float
                     ),  
-                "d_arm": spaces.Box(0,2,dtype=float),
-                "d_arm_rel": spaces.Box(
+                "d_arm": spaces.Box(0,2,dtype=float), # absolute distance to arm 
+                "d_arm_rel": spaces.Box( # relative distance to arm
                     low = np.array([-2,-2,-2]),
                     high =np.array([2,2,2]), 
                     dtype = float
                     ),                                    
+                "vel_limit": spaces.Box( # maximal allowed distance 
+                    low = np.array([-1,-1,-1],
+                    high = np.array([1,1,1]), 
+                    dtype = float
+                    )                    
+                )  
             }
         )
 
@@ -110,6 +120,11 @@ class WeBot_environment(Env):
         y_down = np.array([0,-1,0])  # downward direction for y 
         rot_dist = np.dot(y_axis, y_down) / (np.linalg.norm(y_axis) * np.linalg.norm(y_down))
         return dist, np.absolute(rot_dist)
+    
+    #return maximal allowed velocity according to ssm
+    def get_max_vel(self): 
+        min_dist = self.d_arm
+        
    
    #returne done and if successed 
     def check_done(self):     

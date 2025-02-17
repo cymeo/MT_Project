@@ -76,7 +76,7 @@ DEF Table Solid {
   }
 }
 DEF Table Solid {
-  translation -1.06 0 0.4
+  translation -1.38 0 0.4
   children [
     Shape {
       appearance Appearance {
@@ -309,7 +309,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.69107631767437e-05
+              rotation 0 1 0 1.691060561155018e-05
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -541,7 +541,7 @@ DEF Robot Robot {
                         ]
                         endPoint Solid {
                           translation 0 0 0.392
-                          rotation 0 1 0 1.267212130157331e-06
+                          rotation 0 1 0 1.26651104455448e-06
                           children [
                             Shape {
                               appearance USE METAL_APPEARANCE

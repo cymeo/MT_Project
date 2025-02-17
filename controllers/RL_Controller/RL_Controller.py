@@ -46,7 +46,6 @@ for episode in range(100):
     
     while True: 
         action,_ = model.predict(obs, deterministic=False)
-        #print(env.step(action))
         obs, reward, done, truncated = env.step(action)        
         if reward >= 0: 
             successed.append(1)  
