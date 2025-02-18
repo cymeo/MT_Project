@@ -14,7 +14,7 @@ class WeBot_environment(Env):
         super().__init__()
         # Define action and observation space
          ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([2,0.0,500,200]) 
+        self.weights = np.array([1,0.0,500,500]) 
         self.max_step = 700
         #action = Motorangle steps  
         self.action_space = spaces.Box(low= -np.pi/10, high = np.pi/10, shape = (3,))

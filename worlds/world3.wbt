@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.3408582530579793 -0.08601219645172674 0.9361717542117002 3.923479947170978
-  position 2.803311785072619 3.2923693885802017 3.6696046008403966
+  orientation -0.1560386169760713 0.011951334567820058 0.9876786499738885 3.6844316574308715
+  position 3.7284455488434913 2.1670866285334633 1.29304378438385
 }
 TexturedBackground {
 }
@@ -19,7 +19,7 @@ RectangleArena {
   floorSize 5 5
 }
 DEF Arm Solid {
-  translation 1.13985 0.491173 0.47575
+  translation 1.43985 0.491173 0.47575
   children [
     Shape {
       appearance Appearance {
@@ -56,7 +56,7 @@ DEF Box Solid {
   name "solid(2)"
 }
 DEF Table Solid {
-  translation 0.37 0 -0.5
+  translation 0.37 0 -1.36
   children [
     Shape {
       appearance Appearance {
@@ -75,7 +75,7 @@ DEF Table Solid {
   }
 }
 DEF Wall Solid {
-  translation -0.86 0 -0.01
+  translation -1.27 0 -0.01
   children [
     Shape {
       appearance Appearance {
@@ -308,7 +308,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.693973022793667e-05
+              rotation 0 1 0 1.6939205903078135e-05
               children [
                 Shape {
                   appearance PBRAppearance {

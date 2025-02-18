@@ -44,9 +44,9 @@ def plot_monitor_data(file_path):
     
     #stackplot
     window_size = 100  
-    crash_count = np.convolve(rewards <= -200, np.ones(window_size, dtype=int), mode='same')
+    crash_count = np.convolve(rewards <= -500, np.ones(window_size, dtype=int), mode='same')
     success_count = np.convolve(rewards > 0, np.ones(window_size, dtype=int), mode='same')
-    overstepped_count = np.convolve((-200 < rewards) & (rewards < 0), np.ones(window_size, dtype=int), mode='same')    
+    overstepped_count = np.convolve((-500 < rewards) & (rewards < 0), np.ones(window_size, dtype=int), mode='same')    
     axs[0,1].stackplot(epochs,crash_count,overstepped_count,success_count,labels=['Crash', 'Max Step', 'Success'], colors = ['lightpink','lightyellow','lightgreen'])
     # axs[0, 1].plot(crash_count, label='crash', color='red', linewidth=2)
     # axs[0, 1].plot(success_count, label='success', color='green', linewidth=2)
@@ -74,6 +74,7 @@ def plot_monitor_data(file_path):
 
 # Example usage
 plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controller/monitor_logs/env_03_0.monitor.csv')
+
 
 
 

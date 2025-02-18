@@ -29,10 +29,7 @@ arm = supervisor.getFromDef('Arm')
 table = supervisor.getFromDef('Table')
 
 
-def get_Arm(): 
-    arm_pos = arm.getPosition()
-    return arm_pos       
-        
+
 #get motors
 motors = []
 motors.append(supervisor.getDevice('shoulder_pan_joint'))
@@ -42,6 +39,10 @@ motors.append(supervisor.getDevice('wrist_1_joint'))
 motors.append(supervisor.getDevice('wrist_2_joint'))
 motors.append(supervisor.getDevice('wrist_3_joint'))
 
+def get_Arm(): 
+    arm_pos = arm.getPosition()
+    return arm_pos       
+        
 def get_motor_pos(): 
     sensors= []
     for n, motor in enumerate(motors):

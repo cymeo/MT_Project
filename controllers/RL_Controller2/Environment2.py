@@ -1,10 +1,9 @@
 import From_Webot2 as FW
-import gymnasium as gym
 from gymnasium import Env
 import numpy as np
 from gymnasium import spaces
 from scipy.spatial.transform import Rotation as R
-import time
+import time 
 
 class WeBot_environment(Env):
     """Custom Environment that follows gym interface."""
@@ -12,17 +11,32 @@ class WeBot_environment(Env):
     def __init__(self):
                 
         super().__init__()
-        # Define action and observation space
-         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([2,0.0,50,200]) 
+        ###learning parameters#######
+        # rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ###
+        self.weights = np.array([1,0.0,500,500]) 
         self.max_step = 100
-        #action = end effector translational velocity 
-        self.action_space = spaces.Box(low= -0.5, high = 0.5, shape = (3))        
-        #observation = Endeffector pose, motor angles, Goal Pose, 
+        
+        self.crashed = False
+        self.done = False      
+        self.current_step = 0        
         self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
+         
+        # observation parameters
+        self.p_ee = np.array([])
+        self.v_ee = np.array([])
+        self.theta = np.zeros(6)
+        self.goal = np.array([0.3,0.2,0.3])
+        self.dist = 1 # dist to goal 
+        self.p_arm = np.array([])
+        self.d_arm = np.array([])       
+        self.vel_limit = np.array([])
+        self.time = 0 
+        
+        # action space: pose steps   
+        self.action_space = spaces.Box(low= -np.pi/10, high =np.pi/10, shape = (6))        
         self.observation_space = spaces.Dict(
             {
-                "p_end": spaces.Box( # end effector pose
+                "p_ee": spaces.Box( # end effector pose
                     low = np.array([-1.2,-1.2,-1.2, -1,-1,-1,-1]),
                     high =np.array([1.2,1.2,1.2, 1,1,1,1]), 
                     dtype = float
@@ -31,18 +45,17 @@ class WeBot_environment(Env):
                     low = np.array([-1,-1,-1]),
                     high = np.array([1,1,1]),
                     dtype = float 
-                ),
-                
+                ),               
+                "theta": spaces.Box( # robot joint poses
+                        low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
+                        high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
+                        dtype = float
+                    ),
                 "goal":spaces.Box( # goal position 
                     low = np.array([-1,-1,-1]),
                     high =np.array([1,1,1]), 
                     dtype = float    
                 ),
-                # "theta": spaces.Box( # robot joint poses
-                #         low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
-                #         high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
-                #         dtype = float
-                #     ),
                 "d_goal": spaces.Box(0,2,dtype=float), # absolute distance to goal 
                 "d_goal_rel": spaces.Box( # distance to goal 
                     low = np.array([-2,-2,-2]),
@@ -61,58 +74,50 @@ class WeBot_environment(Env):
                     dtype = float
                     ),                                    
                 "vel_limit": spaces.Box( # maximal allowed distance 
-                    low = np.array([-1,-1,-1],
+                    low = np.array([-1,-1,-1]),
                     high = np.array([1,1,1]), 
-                    dtype = float
-                    )                    
-                )  
+                    dtype = float                     
+                ),  
+                "time": spaces.Box( # in sec 
+                    low = 0,
+                    high = 1000,
+                    dtype = float 
+                )
             }
         )
-
-        self.action = np.zeros(6)
-        self.timestep = 0
-        #further Parameters
-        self.current_step = 0
-        self.theta = np.zeros(6)
-        self.goal = np.array([0.3,0.2,0.3])
-        self.dist = 1
-        self.prev_dist = 1 
-        self.p_arm = np.array([])
-        
-        self.crashed = False
-        self.done = False
 
     def get_observation(self):
         #### todos: 
         # get motor,angles theta
-        self.theta = FW.get_motor_pos()
-        # get foreward kinematics 
-        p_end = FW.get_forward_kinematics(self.theta)
-        transl = np.array(p_end[:3,3])
-        rot= R.from_matrix(p_end[:3,:3])
+        self.theta, self.p_ee, self.v_ee = FW.get_robot_info()
+        
+        transl = np.array(self.p_ee[:3,3])
+        rot= R.from_matrix(self.p_ee[:3,:3])
         rot_quat= np.array(rot.as_quat())
-        #print("transl: ", transl, "   rot: ", rot_quat)
-        self.p_end = np.concatenate((transl,rot_quat))
+        self.p_ee = np.concatenate((transl,rot_quat))
         self.dist, self.rot_dist = self.get_distance()
         self.p_arm  = FW.get_Arm()
-        self.d_arm = np.linalg.norm(self.p_arm - self.p_end[:3])
+        self.d_arm = np.linalg.norm(self.p_arm - self.p_ee[:3])
 
         observation = { 
+            "v_ee": self.v_ee,
+            "p_ee": self.p_ee, 
+            "theta": self.theta,
             "goal": self.goal,
-            "p_end": self.p_end, 
-            "theta": self.theta, 
             "d_goal": self.dist,
-            "d_goal_rel": np.subtract(self.goal, self.p_end[:3]),
+            "d_goal_rel": np.subtract(self.goal, self.p_ee[:3]),
             "p_arm": self.p_arm,
             "d_arm": self.d_arm,
-            "d_arm_rel": np.subtract(self.p_arm, self.p_end[:3])
+            "d_arm_rel": np.subtract(self.p_arm, self.p_ee[:3]),
+            "vel_limit": self.vel_limit,
+            "time": self.time
         }
         return observation
 
     def get_distance(self):
-        dist = np.linalg.norm(self.goal - self.p_end[:3])
+        dist = np.linalg.norm(self.goal - self.p_ee[:3])
         goal_rot = np.array([0,-1,0])
-        ee_rot_quat = R.from_quat(self.p_end[3:])
+        ee_rot_quat = R.from_quat(self.p_ee[3:])
         ee_rot= ee_rot_quat.as_matrix()
         # rot_dist = np.arccos((np.trace(np.dot(goal_rot.T,ee_rot))-1)/2)
          #Compute the cosine similarity (dot product)

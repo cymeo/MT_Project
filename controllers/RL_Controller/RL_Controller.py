@@ -15,27 +15,27 @@ import numpy as np
 env = W_Env()
 #check_env(env, warn = False)
 #print("environment checked")
-env = Monitor(env, filename=f"monitor_logs/env_03_0") 
+env = Monitor(env, filename=f"monitor_logs/env_03_1") 
 env = DummyVecEnv([lambda: env])
 
 print("PPO on cuda")
-model = PPO(
-    policy = "MultiInputPolicy", 
-    env= env, 
-    device="cuda",
-    batch_size=1024,
-    learning_rate= 3e-4,  
-    n_steps= 2048,
-    )
-#model = PPO.load('ppo1_1')
-#model.set_env(env)  # Set environment
+# model = PPO(
+#     policy = "MultiInputPolicy", 
+#     env= env, 
+#     device="cuda",
+#     batch_size=1024,
+#     learning_rate= 3e-4,  
+#     n_steps= 2048,
+#     )
+model = PPO.load('ppo3_0')
+model.set_env(env)  # Set environment
 
 print("model loaded")
 obs = env.reset()
-steps = 700
+steps = 100
 episodes = 10000
-model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log3_0")   
-model.save("ppo3_0")
+model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log3_1")   
+model.save("ppo3_1")
 
 print('start test')
 successed = []
@@ -64,5 +64,5 @@ DF = pd.DataFrame({
     "success": successed,
     "steps":np.array(steps_per_Episodes)
     })
-DF.to_csv("test_results3")
+DF.to_csv("test_results3_1")
 
