@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.1590011549630817 -0.014833431801568016 0.987166957521064 4.057236636609399
-  position 4.029619463515113 6.032461208236392 2.1629157093280194
+  orientation -0.21616509471170658 -0.05472422856155785 0.9748219892045015 4.1589856427942165
+  position 2.4787459236062244 3.9509643425353977 2.163320258645143
 }
 TexturedBackground {
 }
@@ -57,7 +57,7 @@ DEF Box Solid {
   name "solid(2)"
 }
 DEF Table Solid {
-  translation 0.17 0 -0.5
+  translation 0.17 0 -1.54
   children [
     Shape {
       appearance Appearance {
@@ -77,7 +77,7 @@ DEF Table Solid {
   }
 }
 DEF Wall Solid {
-  translation -0.72 0 0.46
+  translation -1.87 0 0.46
   children [
     Shape {
       appearance Appearance {

@@ -57,7 +57,7 @@ DEF Box Solid {
   name "solid(2)"
 }
 DEF Table Solid {
-  translation 0.39 0 -0.51
+  translation 0.39 0 -1.24
   children [
     Shape {
       appearance Appearance {
@@ -71,25 +71,6 @@ DEF Table Solid {
     }
   ]
   name "solid(1)"
-  boundingObject DEF table Box {
-    size 1 1 1
-  }
-}
-DEF Table Solid {
-  translation -1.08 0 0.4
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0.5 0.5 0.5
-        }
-      }
-      geometry Box {
-        size 1 1 1
-      }
-    }
-  ]
-  name "solid(3)"
   boundingObject DEF table Box {
     size 1 1 1
   }
@@ -309,7 +290,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.6834170963209107e-05
+              rotation 0 1 0 1.671036174737059e-05
               children [
                 Shape {
                   appearance PBRAppearance {

@@ -12,9 +12,8 @@ class WeBot_environment(Env):
     def __init__(self):
         
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([1,0.0,200,200]) 
-        self.max_step = 100
-        
+        self.weights = np.array([1,0.0,100,70]) 
+        self.max_step = 100        
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
@@ -144,11 +143,9 @@ class WeBot_environment(Env):
     def step(self, action):
 
         self.current_step += 1 
-        #action = np.array([action[0],action[1],action[2], 0,0,0])
-        new_theta = np.clip((self.theta+action), -np.pi, np.pi)
+        new_theta = np.clip((self.theta+action*2), -np.pi, np.pi)
         #new_theta[2] = np.clip(new_theta[2], -np.pi, np.pi)
         new_theta[1] = np.clip(new_theta[1],-np.pi/2,0)
-        #print("new_theta",new_theta)
         self.theta, self.crashed = FW.move_robot(new_theta) 
         
         observation = self.get_observation()
