@@ -15,10 +15,13 @@ import numpy as np
 env = W_Env()
 #check_env(env, warn = False)
 #print("environment checked")
-env = Monitor(env, filename=f"monitor_logs/env_03_4") 
+env = Monitor(env, filename=f"monitor_logs/env_03_41") 
 env = DummyVecEnv([lambda: env])
 
-print("PPO on cuda")
+
+model = PPO.load('ppo3_4')
+model.set_env(env)  # Set environment
+
 # model = PPO(
 #     policy = "MultiInputPolicy", 
 #     env= env, 
@@ -27,14 +30,13 @@ print("PPO on cuda")
 #     learning_rate= 3e-4,  
 #     n_steps= 2048,
 #     )
-model = PPO.load('ppo3_3')
-model.set_env(env)  # Set environment
+
 
 print("model loaded")
 obs = env.reset()
-steps = 50
-episodes = 7000
-model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log3_4")   
+steps = 30
+episodes = 40000
+model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log3_41")   
 model.save("ppo3_4")
 
 print('start test')
@@ -42,8 +44,7 @@ successed = []
 steps_per_Episodes = []
 for episode in range(100):
     done = False
-    steps = 0
-    
+    steps = 0 
     while True: 
         action,_ = model.predict(obs, deterministic=False)
         obs, reward, done, truncated = env.step(action)        
@@ -64,5 +65,5 @@ DF = pd.DataFrame({
     "success": successed,
     "steps":np.array(steps_per_Episodes)
     })
-DF.to_csv("test_results3_4")
+DF.to_csv("test_results3_41")
 

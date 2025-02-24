@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.15500783330179857 -0.00696053164647046 0.9878887197525237 3.9683855299711595
-  position 3.8586914640871064 4.6813933692481315 1.8303518797362384
+  orientation -0.06496024004157176 0.04823749027289894 0.9967212808734012 3.2434710683739683
+  position 14.94284578870385 2.0854941935182936 2.461657297503028
 }
 TexturedBackground {
 }
@@ -57,7 +57,7 @@ DEF Box Solid {
   name "solid(2)"
 }
 DEF Table Solid {
-  translation 0.39 0 -1.24
+  translation 0.39 0 -0.51
   children [
     Shape {
       appearance Appearance {
@@ -71,6 +71,82 @@ DEF Table Solid {
     }
   ]
   name "solid(1)"
+  boundingObject DEF table Box {
+    size 1 1 1
+  }
+}
+DEF Table Solid {
+  translation -0.9 0 0.43
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.5 0.5 0.5
+        }
+      }
+      geometry Box {
+        size 1 1 1
+      }
+    }
+  ]
+  name "solid(3)"
+  boundingObject DEF table Box {
+    size 1 1 1
+  }
+}
+DEF Table Solid {
+  translation 0.27 -1.26 0.43
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.5 0.5 0.5
+        }
+      }
+      geometry Box {
+        size 1 1 1
+      }
+    }
+  ]
+  name "solid(4)"
+  boundingObject DEF table Box {
+    size 1 1 1
+  }
+}
+DEF Table Solid {
+  translation 0.27 1.23 0.43
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.5 0.5 0.5
+        }
+      }
+      geometry Box {
+        size 1 1 1
+      }
+    }
+  ]
+  name "solid(5)"
+  boundingObject DEF table Box {
+    size 1 1 1
+  }
+}
+DEF Table Solid {
+  translation 0.27 0.12 1.78
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.5 0.5 0.5
+        }
+      }
+      geometry Box {
+        size 1 1 1
+      }
+    }
+  ]
+  name "solid(6)"
   boundingObject DEF table Box {
     size 1 1 1
   }
@@ -290,7 +366,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.671036174737059e-05
+              rotation 0 1 0 1.628952522197616e-05
               children [
                 Shape {
                   appearance PBRAppearance {

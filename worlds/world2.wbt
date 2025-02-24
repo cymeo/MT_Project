@@ -8,7 +8,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.21616509471170658 -0.05472422856155785 0.9748219892045015 4.1589856427942165
-  position 2.4787459236062244 3.9509643425353977 2.163320258645143
+  position 1.7459384478738262 2.6423383176477726 1.5696670140149849
 }
 TexturedBackground {
 }
@@ -19,7 +19,7 @@ RectangleArena {
   floorSize 5 5
 }
 DEF Arm Solid {
-  translation 1.19784 0 0.507323
+  translation 0.311672 0 0.342128
   rotation 0 1 0 -2.094395307179586
   children [
     Shape {
@@ -311,7 +311,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.7246045452904943e-05
+              rotation 0 1 0 1.7245942451776432e-05
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -938,6 +938,7 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "velocity_control"
+  controller "RL_Controller2"
   supervisor TRUE
+  selfCollision TRUE
 }

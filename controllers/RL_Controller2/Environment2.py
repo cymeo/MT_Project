@@ -23,6 +23,7 @@ class WeBot_environment(Env):
         #### addistional params: 
         self.p_ee = np.array([])
         self.ee_pose = np.array([]) # transfrom matrix
+        self.theta = np.zeros(6)
 
         # action space: pose steps   
         self.action_space = spaces.Box(low= -np.pi/10, high =np.pi/10, shape = (6,))        
@@ -34,8 +35,8 @@ class WeBot_environment(Env):
                     dtype = float
                     ), 
                 "v_ee": spaces.Box( # end effector velocity 
-                    low = np.array([-1,-1,-1]),
-                    high = np.array([1,1,1]),
+                    low = np.array([-11,-11,-11]),
+                    high = np.array([11,11,11]),
                     dtype = float 
                 ),               
                 "theta": spaces.Box( # robot joint poses
@@ -56,13 +57,13 @@ class WeBot_environment(Env):
                     ),
                 "p_arm": spaces.Box( # position of arm 
                     low = np.array([0,0,0]),
-                    high =np.array([2,2,2]), 
+                    high =np.array([3,3,3]), 
                     dtype = float
                     ),  
-                "d_arm_abs": spaces.Box(low = 0,high = 2, dtype=float), # absolute distance to arm 
+                "d_arm_abs": spaces.Box(low = 0,high = 5, dtype=float), # absolute distance to arm 
                 "d_arm": spaces.Box( # relative distance to arm
-                    low = np.array([-2,-2,-2]),
-                    high =np.array([2,2,2]), 
+                    low = np.array([-3,-3,-3]),
+                    high =np.array([3,3,3]), 
                     dtype = float
                     ),                                    
                 "vel_limit": spaces.Box( # maximal allowed distance 
@@ -85,7 +86,7 @@ class WeBot_environment(Env):
    
     def check_done(self):     #returne done and if successed 
         #sucess
-        if (self.observation_space["d_goal_abs"] <= 0.05):
+        if (self.observation["d_goal_abs"] <= 0.05):
             success = True
             print('success')
             return True, True
@@ -104,7 +105,7 @@ class WeBot_environment(Env):
         R_dist= 0 ## distance to goal
         R_rot_dist = 0 
         self.done, success  = self.check_done()
-        R_dist, R_rot_dist = FW.get_distance
+        R_dist, R_rot_dist = FW.get_distance()
         if success: 
            R_success = 1  
         if self.crashed: 
@@ -120,8 +121,11 @@ class WeBot_environment(Env):
         return total_reward
 
     def step(self, action):
-        #count steps
-        self.current_step += 1 
+        
+        # if self.current_step == 0:
+        #     self.observation = FW.get_observation()
+            
+        self.theta = self.observation['theta']
     
         # move robot        
         new_theta = np.clip((self.theta+action), -2*np.pi, 2*np.pi)
@@ -130,21 +134,20 @@ class WeBot_environment(Env):
         self.crashed = FW.move_robot(new_theta) 
         
         # get observation and reward
-        observation = FW.get_observation()
+        self.observation = FW.get_observation()
         reward = self.get_reward()
 
         truncated = False
         info = {}
-
-        return observation, reward, self.done, truncated, info
+        #count steps
+        self.current_step += 1
+        return self.observation, reward, self.done, truncated, info
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         
-        
         if self.crashed: 
             FW.reset_sim()
-        
         #time.sleep(0.1)
         # new goal_pos
         rand_x = np.random.uniform(0.3, 0.7) 
@@ -161,10 +164,10 @@ class WeBot_environment(Env):
         FW.get_Arm()
         FW.get_motor_info()
         FW.get_robot_info()
-        observation = FW.get_observation()
+        self.observation = FW.get_observation()
         info = {}
         
-        return observation, info
+        return self.observation, info
 
     def render(self):
         pass
