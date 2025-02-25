@@ -16,17 +16,17 @@ def plot_monitor_data(file_path):
 
     # filter for episode lengths
     X = epochs.reshape(-1, 1)  # Reshape for sklearn
-    y_epF = uniform_filter1d(steps,100)
+    y_epF = uniform_filter1d(steps,1000)
     
     # filter for rewards
-    y_rewards_f = uniform_filter1d(rewards,100)
+    y_rewards_f = uniform_filter1d(rewards,1000)
     
     # Create the subplots
     fig, axs = plt.subplots(2, 2, figsize=(10, 8), sharex=True)
 
     # Plot rewards
     axs[0, 0].scatter(epochs, rewards, label='Rewards', color='blue')
-    axs[0, 0].plot(epochs, y_rewards_f, label='Moving Average 50', color='red', linewidth=2)
+    axs[0, 0].plot(epochs, y_rewards_f, label='Moving Average 1000', color='red', linewidth=2)
     axs[0, 0].set_title('Rewards per Epoch')
     axs[0, 0].set_ylabel('Rewards')
     axs[0, 0].legend(loc='upper left', bbox_to_anchor=(1, 1))
@@ -34,7 +34,7 @@ def plot_monitor_data(file_path):
 
     # Plot steps (episode lengths) with linear regression
     axs[1, 0].scatter(epochs, steps, label='Steps', color='blue', alpha=0.7)
-    axs[1, 0].plot(epochs, y_epF, label='moving Average  50 ', color='red', linewidth=2)
+    axs[1, 0].plot(epochs, y_epF, label='moving Average  1000 ', color='red', linewidth=2)
     axs[1, 0].set_title('Steps per Epoch')
     axs[1, 0].set_xlabel('Epochs')
     axs[1, 0].set_ylabel('Steps')
@@ -50,12 +50,12 @@ def plot_monitor_data(file_path):
     axs[0,1].stackplot(epochs,success_count,overstepped_count,crash_count,labels=['Success', 'Max Step','Crash' ], colors = ['lightgreen','lightyellow','lightpink'])
     axs[0, 1].set_title('crashes & successes per 100 epochs')
     axs[0, 1].set_xlabel('Epochs')
-    axs[0, 1].set_ylabel('Steps')
+    axs[0, 1].set_ylabel('Percentage %')
     axs[0, 1].legend(loc='upper left', bbox_to_anchor=(1, 1))
     axs[0, 1].grid()
     
     filtered_steps = steps[rewards > 0]
-    filtered_steps_average = uniform_filter1d(filtered_steps,100)
+    filtered_steps_average = uniform_filter1d(filtered_steps,1000)
     axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='number of steps', color='blue', alpha = 0.5)
     axs[1, 1].plot(epochs[:len(filtered_steps)], filtered_steps_average, label='moving average 50', color='red', linewidth=2)
     axs[1, 1].set_title('Steps per successed Epoch')

@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.06496024004157176 0.04823749027289894 0.9967212808734012 3.2434710683739683
-  position 14.94284578870385 2.0854941935182936 2.461657297503028
+  orientation -0.013791919464716633 0.051849071782684206 0.9985596911115293 3.7288811768014876
+  position 6.4237148520977065 4.45303963837543 0.6827851558723036
 }
 TexturedBackground {
 }
@@ -63,6 +63,7 @@ DEF Table Solid {
       appearance Appearance {
         material Material {
           diffuseColor 0.5 0.5 0.5
+          transparency 0.71
         }
       }
       geometry Box {
@@ -82,6 +83,7 @@ DEF Table Solid {
       appearance Appearance {
         material Material {
           diffuseColor 0.5 0.5 0.5
+          transparency 0.7
         }
       }
       geometry Box {
@@ -101,6 +103,7 @@ DEF Table Solid {
       appearance Appearance {
         material Material {
           diffuseColor 0.5 0.5 0.5
+          transparency 0.7
         }
       }
       geometry Box {
@@ -120,6 +123,7 @@ DEF Table Solid {
       appearance Appearance {
         material Material {
           diffuseColor 0.5 0.5 0.5
+          transparency 0.9
         }
       }
       geometry Box {
@@ -139,6 +143,7 @@ DEF Table Solid {
       appearance Appearance {
         material Material {
           diffuseColor 0.5 0.5 0.5
+          transparency 0.9
         }
       }
       geometry Box {
@@ -366,7 +371,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.628952522197616e-05
+              rotation 0 1 0 1.6187133531110556e-05
               children [
                 Shape {
                   appearance PBRAppearance {
