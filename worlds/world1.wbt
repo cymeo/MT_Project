@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.013791919464716633 0.051849071782684206 0.9985596911115293 3.7288811768014876
-  position 6.4237148520977065 4.45303963837543 0.6827851558723036
+  orientation -0.3241467778771054 -0.11244633498001085 0.939300105472928 4.1132959134114575
+  position 1.8437628513924884 3.1683273330830906 2.5604535767475176
 }
 TexturedBackground {
 }
@@ -40,7 +40,7 @@ DEF Arm Solid {
   }
 }
 DEF Box Solid {
-  translation 0.1329456356646415 0.05985910039724929 0.2451242649265174
+  translation 0.822946 0.0598591 0.245121
   rotation 0 1 0 -3.1415853071795863
   children [
     Shape {
@@ -56,8 +56,27 @@ DEF Box Solid {
   ]
   name "solid(2)"
 }
+DEF Tip Solid {
+  translation 0.132946 0.759859 0.245124
+  rotation 0 1 0 -3.1415853071795863
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0.9 0
+        }
+      }
+      geometry Sphere {
+        radius 0.05
+      }
+      castShadows FALSE
+      isPickable FALSE
+    }
+  ]
+  name "solid(3)"
+}
 DEF Table Solid {
-  translation 0.39 0 -0.51
+  translation 0.39 0 -1.23
   children [
     Shape {
       appearance Appearance {
@@ -72,86 +91,6 @@ DEF Table Solid {
     }
   ]
   name "solid(1)"
-  boundingObject DEF table Box {
-    size 1 1 1
-  }
-}
-DEF Table Solid {
-  translation -0.9 0 0.43
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0.5 0.5 0.5
-          transparency 0.7
-        }
-      }
-      geometry Box {
-        size 1 1 1
-      }
-    }
-  ]
-  name "solid(3)"
-  boundingObject DEF table Box {
-    size 1 1 1
-  }
-}
-DEF Table Solid {
-  translation 0.27 -1.26 0.43
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0.5 0.5 0.5
-          transparency 0.7
-        }
-      }
-      geometry Box {
-        size 1 1 1
-      }
-    }
-  ]
-  name "solid(4)"
-  boundingObject DEF table Box {
-    size 1 1 1
-  }
-}
-DEF Table Solid {
-  translation 0.27 1.23 0.43
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0.5 0.5 0.5
-          transparency 0.9
-        }
-      }
-      geometry Box {
-        size 1 1 1
-      }
-    }
-  ]
-  name "solid(5)"
-  boundingObject DEF table Box {
-    size 1 1 1
-  }
-}
-DEF Table Solid {
-  translation 0.27 0.12 1.78
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0.5 0.5 0.5
-          transparency 0.9
-        }
-      }
-      geometry Box {
-        size 1 1 1
-      }
-    }
-  ]
-  name "solid(6)"
   boundingObject DEF table Box {
     size 1 1 1
   }
@@ -371,7 +310,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.6187133531110556e-05
+              rotation 0 1 0 1.6161379291270775e-05
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -998,7 +937,7 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "RL_Controller"
+  controller "<extern>"
   supervisor TRUE
   selfCollision TRUE
 }

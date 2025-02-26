@@ -44,19 +44,20 @@ while supervisor.step(timestep) != -1:
       
     ikAnglesD=robot_chain.inverse_kinematics(box_position,box_rotationMatrix, "all")
     
-    reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
+    #reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
+    reset_pose = np.array([0,0,0,0,0,1])
 
     #print("ikangels",ikAnglesD)
     
-    sensors = np.zeros(10)
+    sensors = np.zeros(8)
     for n, motor in enumerate(motors):
         motor.setPosition(reset_pose[n])
-        #motor.setPosition(ikAnglesD[n+2])
         sensor = motor.getPositionSensor()
         sensor.enable(timestep)
         sensors[n+1]= sensor.getValue()
     robotTipMatrix = robot_chain.forward_kinematics(sensors)
     robot_realrot = robotTipMatrix[:3,:3]
     #print("sensors: ",sensors)
+    print('sensors:', sensors)
 
-    #print('robot rotation', robot_realrot )
+    print('robot rotation', robotTipMatrix)

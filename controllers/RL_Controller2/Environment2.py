@@ -88,7 +88,7 @@ class WeBot_environment(Env):
         #sucess
         if (self.observation["d_goal_abs"] <= 0.05):
             success = True
-            print('success')
+            print('success, distance: ', "d_goal_abs" )
             return True, True
         # step mlimit reached           
         if (self.current_step >= self.max_step):
