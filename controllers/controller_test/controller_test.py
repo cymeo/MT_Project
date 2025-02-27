@@ -44,8 +44,8 @@ while supervisor.step(timestep) != -1:
       
     ikAnglesD=robot_chain.inverse_kinematics(box_position,box_rotationMatrix, "all")
     
-    #reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
-    reset_pose = np.array([0,0,0,0,0,1])
+    reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
+    #reset_pose = np.array([0,0,0,0,0,1])
 
     #print("ikangels",ikAnglesD)
     
