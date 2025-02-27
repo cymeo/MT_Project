@@ -12,28 +12,30 @@ import pandas as pd
 import numpy as np
 
 env = W_Env()
-#check_env(env, warn = False)
-#print("environment checked")
+check_env(env, warn = False)
+print("environment checked")
+
 env = Monitor(env, filename=f"monitor_logs/env01") 
 env = DummyVecEnv([lambda: env])
 
 
-# model = PPO.load('ppo3_2')
-# model.set_env(env)  # Set environment
+model = PPO.load('ppo1')
+model.set_env(env)  # Set environment
 
-model = PPO(
-    policy = "MultiInputPolicy", 
-    env= env, 
-    device="cuda",
-    batch_size=1024,
-    learning_rate= 3e-4,  
-    n_steps= 2048,
-    )
+# model = PPO(
+#     policy = "MultiInputPolicy", 
+#     env= env, 
+#     device="cuda",
+#     batch_size=1024,
+#     learning_rate= 3e-4,  
+#     n_steps= 2048,
+#     )
+
 
 
 print("model loaded")
 obs = env.reset()
-steps = 300
+steps = 600
 episodes = 10000
 model.learn(total_timesteps= episodes*steps, tb_log_name= "PPO_log1")   
 model.save("ppo1")

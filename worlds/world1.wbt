@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.3241467778771054 -0.11244633498001085 0.939300105472928 4.1132959134114575
-  position 1.8437628513924884 3.1683273330830906 2.5604535767475176
+  orientation -0.17438932366462412 -0.02407391518643336 0.9843824512857751 4.0763700194873325
+  position 3.7977816912717426 5.3493851420362235 1.9531904390491994
 }
 TexturedBackground {
 }
@@ -76,7 +76,7 @@ DEF Tip Solid {
   name "solid(3)"
 }
 DEF Table Solid {
-  translation 0.39 0 -1.23
+  translation 0.39 0 -0.54
   children [
     Shape {
       appearance Appearance {
@@ -310,7 +310,7 @@ DEF Robot Robot {
             ]
             endPoint Solid {
               translation 0 0.138 0
-              rotation 0 1 0 1.6161379291270775e-05
+              rotation 0 1 0 1.6154618185059876e-05
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -542,7 +542,7 @@ DEF Robot Robot {
                         ]
                         endPoint Solid {
                           translation 0 0 0.392
-                          rotation 0 1 0 1.26651104455448e-06
+                          rotation 0 1 0 7.77149487161957e-07
                           children [
                             Shape {
                               appearance USE METAL_APPEARANCE
@@ -937,7 +937,7 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "<extern>"
+  controller "RL_Controller1"
   supervisor TRUE
   selfCollision TRUE
 }

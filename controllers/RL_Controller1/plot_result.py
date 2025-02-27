@@ -14,8 +14,6 @@ def plot_monitor_data(file_path):
     # Calculate the epochs
     epochs = np.arange(len(rewards))
 
-
-    
     # Create the subplots
     fig, axs = plt.subplots(2, 2, figsize=(10, 8), sharex=True)
 
@@ -73,7 +71,7 @@ def plot_monitor_data(file_path):
     print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
-plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controller/monitor_logs/env_04_0.monitor.csv')
+plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controller1/monitor_logs/env01.monitor.csv')
 
 
 

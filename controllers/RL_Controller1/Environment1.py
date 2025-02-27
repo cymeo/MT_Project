@@ -8,10 +8,9 @@ class WeBot_environment(Env):
     """Custom Environment that follows gym interface."""
 
     def __init__(self):
-        
-        ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([0.2,0.02,5,10]) 
-        self.max_step = 400
+        ######### rewards for -distance to goal,-rotational_distance, success, crash ############
+        self.weights = np.array([0.1,0.05,5,50]) 
+        self.max_step = 1000
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
@@ -58,7 +57,6 @@ class WeBot_environment(Env):
         self.crashed = False
         self.done = False
 
-
     def get_observation(self):
         #### todos: 
         # get motor,angles theta
@@ -68,9 +66,9 @@ class WeBot_environment(Env):
         p_ee = np.array(pose_ee[:3,3])
         rot= R.from_matrix(pose_ee[:3,:3])
         rot_quat= np.array(rot.as_quat())
-        self.dist, self.rot_dist = self.get_distance()
-        np.subtract(self.goal, self.p_end[:3])
-
+        #print("goal", self.goal,"p_ee", p_ee)
+        self.dist, self.rot_dist = self.get_distance(self.goal, p_ee, rot)
+        
         observation = { 
             "goal": self.goal,
             "p_ee": p_ee,
@@ -82,17 +80,17 @@ class WeBot_environment(Env):
         
         return observation
 
-    def get_distance(self):
-        dist = np.linalg.norm(self.goal - self.p_end[:3])
+    def get_distance(self, goal, p_ee, rot_ee):
+        dist = np.linalg.norm(goal - p_ee)
         goal_rot = np.array([0,-1,0])
-        ee_rot_quat = R.from_quat(self.p_end[3:])
+        ee_rot_quat = rot_ee #R.from_quat(rot_ee)
         ee_rot= ee_rot_quat.as_matrix()
         #rot_dist = np.arccos((np.trace(np.dot(goal_rot.T,ee_rot))-1)/2)
          #Compute the cosine similarity (dot product)
         y_axis = ee_rot[:, 1]  # Assuming 3x3 rotation matrix
         y_down = np.array([0,-1,0])  # downward direction for y 
         rot_dist = np.dot(y_axis, y_down) / (np.linalg.norm(y_axis) * np.linalg.norm(y_down))
-        return dist, np.absolute(rot_dist)
+        return np.array([dist]), np.array([np.absolute(rot_dist)])
         
     def get_reward(self): 
         R_success = 0 
@@ -116,17 +114,17 @@ class WeBot_environment(Env):
             self.done = True 
             return 0  
         # total reward 
-        total_reward = (
-            -self.weights[0]*R_dist + 
+        total_reward = (-self.weights[0]*R_dist + 
             -self.weights[1]*R_rot_dist + 
             self.weights[2]*R_success + 
-            -self.weights[3]*R_crash)           
-        return total_reward
+            -self.weights[3]*R_crash)     
+        return total_reward[0]
 
          
     def step(self, action):
+        #print("action",action)
         self.current_step += 1 
-        self.theta = FW.get_motor_pos()
+        #self.theta = FW.get_motor_pos()
         new_theta = np.clip((self.theta+action), -np.pi, np.pi)
         FW.move_robot(new_theta)
         
@@ -136,15 +134,16 @@ class WeBot_environment(Env):
 
         truncated = False
         info = {}
+        #print("reward",reward)
 
         return observation, reward, self.done, truncated, info
 
     def reset(self, seed=None, options=None):
-        super().reset(seed=seed)
-        
+        super().reset(seed=seed)        
         #reset Initial pose:
         if self.crashed: 
             FW.reset_sim()
+        self.theta = FW.get_motor_pos
 
         # new goal_pos
         rand_x = np.random.uniform(0.3, 0.6) 
@@ -158,6 +157,7 @@ class WeBot_environment(Env):
         self.done = False 
         self.current_step = 0
         observation = self.get_observation()
+        #print("obs: " ,observation)
         info = {}
         
         return observation, info

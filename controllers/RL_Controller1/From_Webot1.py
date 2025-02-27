@@ -11,7 +11,7 @@ from scipy.spatial.transform import Rotation as R
 supervisor = Supervisor()
 
 # URDF Path for UR5e
-robot_model = pin.buildModelFromUrdf('./ur5e.urdf')
+robot_model = pin.buildModelFromUrdf('./ur5e2.urdf')
 frame_names = [frame.name for frame in robot_model.frames]
 print("All frames in Webots URDF:", frame_names)
 robot_data = robot_model.createData()
@@ -25,8 +25,7 @@ robot_node = supervisor.getFromDef('Robot')
 box = supervisor.getFromDef('Box')
 arm = supervisor.getFromDef('Arm')
 table = supervisor.getFromDef('Table')
-tip = supervisor.getFromDef('Tip')
-     
+tip = supervisor.getFromDef('Tip')   
 
 #get motors
 motors = []
@@ -37,25 +36,25 @@ motors.append(supervisor.getDevice('wrist_1_joint'))
 motors.append(supervisor.getDevice('wrist_2_joint'))
 motors.append(supervisor.getDevice('wrist_3_joint'))
 
-sensors= np.zeros(6)
+sensors = []  
 for n, motor in enumerate(motors):
-    sensor = motor.getPositionSensor()
-    sensor.enable(timestep)
+    sensors.append(motor.getPositionSensor())
+    sensors[n].enable(timestep)
 
 
 def get_motor_pos(): 
     global motors
-    global sensors
+    global sensor
+    theta = [0,0,0,0,0,0]
     for n, motor in enumerate(motors):
-        sensors[n] = sensor.getValue()
-    return sensors
+        theta[n] = sensors[n].getValue()
+    return np.array(theta)
 
 def get_forward_kinematics(angles): 
     global motors
     global robot_model
     global tip
     global robot_data
-    
     theta_dot = np.array([motor.getVelocity() for motor in motors])
     pin.forwardKinematics(robot_model, robot_data, angles, theta_dot)
     pin.updateFramePlacements(robot_model, robot_data) 
@@ -63,7 +62,7 @@ def get_forward_kinematics(angles):
     ee_pose = robot_data.oMf[ee_id].homogeneous
     
     p_ee = ee_pose[:3, 3]  # Extract translation
-    print("robot_tip translate webots", p_ee)
+    #print("robot_tip translate webots", p_ee)
     
     #visualise calculated tip position
     tip_pos = tip.getField("translation")
@@ -84,7 +83,6 @@ def check_crash():
         crashed = True   
     return crashed
     
-
 def reset_sim():
     global supervisor
     global reset_pose
@@ -95,8 +93,16 @@ def reset_sim():
 
 def move_robot(angles):
     global motors 
+    global sensors
+    theta = np.zeros(6)
+    # while True: 
     for n, motor in enumerate(motors):
         motor.setPosition(angles[n])
+        #theta[n] = sensors[n].getValue()
+    supervisor.step(timestep)
+    # if (np.linalg.norm(theta - angles)<=0.01):
+        #     break
+    
     pass
 
 
