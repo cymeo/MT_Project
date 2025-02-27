@@ -17,6 +17,7 @@ def plot_monitor_data(file_path):
     # Create the subplots
     fig, axs = plt.subplots(2, 2, figsize=(10, 8), sharex=True)
 
+
     # filter for rewards
     y_rewards_f = uniform_filter1d(rewards,300)
     # Plot rewards
@@ -70,7 +71,7 @@ def plot_monitor_data(file_path):
     print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
-plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controllerv2/monitor_logs/env02_3.monitor.csv')
+plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controllerv2/monitor_logs/env02.monitor.csv')
 
 
 

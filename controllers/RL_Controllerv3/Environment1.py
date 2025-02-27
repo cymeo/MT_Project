@@ -9,7 +9,7 @@ class WeBot_environment(Env):
 
     def __init__(self):
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([0.1,0.03,5,50]) 
+        self.weights = np.array([0.1,0.04,5,50]) 
         self.max_step = 700
         super().__init__()
         # Define action and observation space
@@ -63,8 +63,6 @@ class WeBot_environment(Env):
         self.done = False
         self.theta_dot = np.zeros(6)
         self.q_goal = np.array([0,0,0,0]) 
-        
-        
     def get_observation(self):
         #### todos: 
         # get motor,angles theta
@@ -115,7 +113,7 @@ class WeBot_environment(Env):
             print("rot_dist",self.rot_dist)
             if self.rot_dist<= 0.01: 
                 print("rot success")
-                R_success += 0.5
+                R_success += 1
         # crashed
         if self.crashed: 
             print("crash")

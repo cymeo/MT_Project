@@ -16,7 +16,7 @@ env = W_Env()
 check_env(env, warn = False)
 print("environment checked")
 
-env = Monitor(env, filename=f"monitor_logs/env02_3") 
+env = Monitor(env, filename=f"monitor_logs/env02") 
 env = DummyVecEnv([lambda: env])
 
 
@@ -34,12 +34,12 @@ model = PPO(
 
 print("model loaded")
 obs = env.reset()
-steps = 25
+steps = 30
 episodes = 100000
 
-checkpoint_callback = CheckpointCallback(save_freq= steps/5*episodes, save_path="./models/", name_prefix="ppo2_3")
+checkpoint_callback = CheckpointCallback(save_freq=episodes, save_path="./models/", name_prefix="ppo2_2")
 
-model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log2_3", callback=checkpoint_callback)   
+model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log2_2", callback=checkpoint_callback)   
 
 
 print('start test')
@@ -67,5 +67,5 @@ DF = pd.DataFrame({
     "success": successed,
     "steps":np.array(steps_per_Episodes)
     })
-#DF.to_csv("test_results4")
+DF.to_csv("test_results4")
 
