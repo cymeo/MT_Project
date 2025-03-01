@@ -162,7 +162,8 @@ class WeBot_environment(Env):
         rand_y = np.random.uniform(-0.5, 0.5)
         rand_z = np.random.uniform(0.05,0.4)    
         self.goal = np.array([rand_x,rand_y,rand_z])
-        self.q_goal =  R.from_euler('x', 180, degrees=True).as_quat()
+        R_zdown = [[0,-1,0], [-1,0,0], [0,0,-1]]
+        self.q_goal =  R.from_matrix(R_zdown).as_quat()
          
         FW.show_goal(self.goal, self.q_goal)
             

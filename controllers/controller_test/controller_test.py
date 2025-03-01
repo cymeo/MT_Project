@@ -1,6 +1,7 @@
 """controller_test controller."""
 from controller import Robot, Supervisor,Connector
-from ikpy.chain import Chain
+import pinocchio as pin 
+
 import numpy as np
 
 from numpy import pi
@@ -12,10 +13,13 @@ from scipy.spatial.transform import Rotation as R
 # define a Supervisor
 supervisor = Supervisor()
 
-# Load the chain by specifying the elements you want to include
-robot_chain = Chain.from_urdf_file("ur5e.urdf")
-# Print the chain to verify the correct links are included
-print(robot_chain)
+
+# load pin model for UR5e
+robot_model = pin.buildModelFromUrdf('./ur5e.urdf')
+frame_names = [frame.name for frame in robot_model.frames]# Print the chain to verify the correct links are included
+robot_data = robot_model.createData()
+
+
 
 ####define basic time step
 timestep = int(supervisor.getBasicTimeStep())
@@ -42,22 +46,27 @@ while supervisor.step(timestep) != -1:
     #print("box_rotation: ", box_rotationMatrix)
     r = R.from_matrix(box_rotationMatrix)
       
-    ikAnglesD=robot_chain.inverse_kinematics(box_position,box_rotationMatrix, "all")
-    
+   
     reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
     #reset_pose = np.array([0,0,0,0,0,1])
 
-    #print("ikangels",ikAnglesD)
     
-    sensors = np.zeros(8)
+    sensors = np.zeros(6)
+    theta_dot = np.zeros(6)
     for n, motor in enumerate(motors):
         motor.setPosition(reset_pose[n])
         sensor = motor.getPositionSensor()
         sensor.enable(timestep)
-        sensors[n+1]= sensor.getValue()
-    robotTipMatrix = robot_chain.forward_kinematics(sensors)
-    robot_realrot = robotTipMatrix[:3,:3]
+        sensors[n] = sensor.getValue()
+        theta_dot[n] = motor.getVelocity()
+    
+    pin.forwardKinematics(robot_model, robot_data, sensors, theta_dot)
+    pin.updateFramePlacements(robot_model, robot_data) 
+    ee_id = robot_model.getFrameId("tool0")  # Get end-effector
+    ee_pose = robot_data.oMf[ee_id].homogeneous
+    
+    
     #print("sensors: ",sensors)
     print('sensors:', sensors)
 
-    print('robot rotation', robotTipMatrix)
+    print('robot pose', ee_pose)
