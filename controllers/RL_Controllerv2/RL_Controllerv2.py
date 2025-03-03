@@ -1,4 +1,4 @@
-from Environment1 import WeBot_environment as W_Env
+from Environment2 import WeBot_environment as W_Env
 import torch
 print(torch.cuda.is_available())  # Should return True if GPU is available
 print(torch.cuda.get_device_name(0))  # Show GPU name if available

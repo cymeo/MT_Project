@@ -4,6 +4,10 @@ import numpy as np
 from gymnasium import spaces
 from scipy.spatial.transform import Rotation as R
 
+
+## simple environement, actionspace is plus or minas motorjoint speeds 
+
+
 class WeBot_environment(Env):
     """Custom Environment that follows gym interface."""
 

@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.21616509471170658 -0.05472422856155785 0.9748219892045015 4.1589856427942165
-  position 2.224828839841772 3.497526686695938 1.9576199817843754
+  orientation -0.22101008663828672 -0.06375830444867697 0.9731851931764924 4.21462152457439
+  position 2.466369683446022 3.9288632170689706 2.1532941667032137
 }
 TexturedBackground {
 }
@@ -19,8 +19,8 @@ RectangleArena {
   floorSize 5 5
 }
 DEF Arm Solid {
-  translation 1.61069 0 1.09213
-  rotation 0 1 0 -2.094395307179586
+  translation 1.4 0 0.4
+  rotation 0 -1 0 2.0944
   children [
     Shape {
       appearance Appearance {
@@ -41,6 +41,7 @@ DEF Arm Solid {
 }
 DEF SV1 Robot {
   controller "Arm_controller"
+  supervisor TRUE
 }
 DEF Box Solid {
   translation 0.598778008547002 0.4284114762584682 0.41781116156734915
@@ -77,7 +78,7 @@ DEF Tip Solid {
   name "solid(4)"
 }
 DEF Table Solid {
-  translation 0.17 0 -1.37
+  translation 0.35 0 -0.5
   children [
     Shape {
       appearance Appearance {
@@ -544,7 +545,7 @@ DEF Robot Robot {
                         ]
                         endPoint Solid {
                           translation 0 0 0.392
-                          rotation 0 0.9999999999999999 0 1.3375832105264356e-05
+                          rotation 0 1 0 1.3375832105264356e-05
                           children [
                             Shape {
                               appearance USE METAL_APPEARANCE
@@ -726,8 +727,6 @@ DEF Robot Robot {
                                           0 0.071 0
                                         ]
                                       }
-                                      linearVelocity -4.431986988246211e-05 0.00017516003342467326 -6.329936432890242e-07
-                                      angularVelocity -2.6312233020282596e-05 -4.652197525312928e-05 0.00036384785343399994
                                     }
                                   }
                                 ]
@@ -762,8 +761,6 @@ DEF Robot Robot {
                                     0 0 0.1
                                   ]
                                 }
-                                linearVelocity -4.7634665635296636e-05 0.0001770762375320083 -5.874858122139703e-07
-                                angularVelocity -2.6309086935251554e-05 -4.652120393770118e-05 0.00036384709724260355
                               }
                             }
                           ]
@@ -798,8 +795,6 @@ DEF Robot Robot {
                               0 0.127 0
                             ]
                           }
-                          linearVelocity -4.7687903225291495e-05 0.00014089597335700078 -5.0337518980527665e-06
-                          angularVelocity 1.5295782783750485e-07 -4.6540127092083966e-05 0.00036386417598338665
                         }
                       }
                     ]
@@ -855,8 +850,6 @@ DEF Robot Robot {
                         0 0 0.15
                       ]
                     }
-                    linearVelocity -1.5733579893956516e-06 5.317253420210796e-05 -4.596879690791597e-06
-                    angularVelocity 2.0154126038717543e-07 3.592179464914857e-07 0.0003638970820448034
                   }
                 }
               ]
@@ -900,8 +893,6 @@ DEF Robot Robot {
                   0 0 0.2125
                 ]
               }
-              linearVelocity -4.9454545947134503e-05 -9.23468662479157e-07 -3.80075340770732e-06
-              angularVelocity 2.5157447314096544e-07 4.0275586575796836e-07 0.00036409557253008946
             }
           }
         ]
@@ -935,8 +926,6 @@ DEF Robot Robot {
             0 -0.02561 0.00193
           ]
         }
-        linearVelocity 9.683546147491249e-06 -4.362715232792435e-07 -2.129126639745295e-06
-        angularVelocity 2.1657849873978683e-08 3.2663734268894104e-07 0.0003642848700094256
       }
     }
   ]
@@ -951,7 +940,7 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "<none>"
+  controller "RL_Controllerv3"
   supervisor TRUE
   selfCollision TRUE
 }

@@ -53,7 +53,6 @@ def move_robot(joint_velocites):
     supervisor.step(timestep)            
     pass
 
-
 def get_motor_pos(): 
     global motors
     global sensor
@@ -63,7 +62,6 @@ def get_motor_pos():
         theta[n] = sensors[n].getValue()
         theta_dot[n]= motor.getVelocity()
     return np.array(theta), np.array(theta_dot)
-
 
 def get_forward_kinematics(angles): 
     global motors
@@ -89,21 +87,38 @@ def get_forward_kinematics(angles):
     tip_rot.setSFRotation([axis[0], axis[1], axis[2], angle])
     return(ee_pose)
 
+p_prev = arm.getField("translation").getSFVec3f()
+t_prev = supervisor.getTime()
+
+def get_arm():
+    global arm
+    global p_prev,t_prev
+    p_arm = arm.getField("translation").getSFVec3f()
+    t_now = supervisor.getTime()
+    dt = t_now - t_prev 
+    if dt>0: 
+        v_arm = [(p_arm[i] - p_prev[i]) / dt for i in range(3)]
+    else: 
+        v_arm = [0,0,0]
+        
+    p_prev = p_arm 
+    t_prev = t_now
+    
+    return np.array(p_arm), np.array(v_arm[:3])  
+
 def check_crash():
     # Check for contact points
-    global robot_node
-    global table
+    global robot_node, table, arm
     contact_robot = []
     contact_table = []
+    contact_arm = []
     contact_robot = robot_node.getContactPoints(includeDescendants=True)
     contact_table = table.getContactPoints(includeDescendants = True)
-    
+    contact_arm = arm.getContactPoints(includeDescendants = True)
     crashed = False
     
-    if contact_table: 
+    if contact_table or contact_arm or contact_robot: 
         crashed = True
-    if contact_robot: 
-        crashed = True   
     return crashed
     
 def reset_sim():

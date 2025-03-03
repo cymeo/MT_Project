@@ -1,4 +1,4 @@
-import From_Webot1 as FW
+import From_Webot2 as FW
 from gymnasium import Env
 import numpy as np
 from gymnasium import spaces
@@ -6,7 +6,10 @@ from scipy.spatial.transform import Rotation as R
 
 class WeBot_environment(Env):
     """Custom Environment that follows gym interface."""
-
+    # action space: Joint motors speed, array of six 
+    # observation: goal pose, endeffector pose, distance to goal, direction to goal 
+    # rewards only on distance to goal, roattional distance and success/ crash 
+    # so far only successful trainig for non changing rotation 
     def __init__(self):
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
         self.weights = np.array([0.1,0.03,5,50]) 
@@ -46,10 +49,9 @@ class WeBot_environment(Env):
                         low = np.array([-2*np.pi, -2*np.pi, -2*np.pi,-2*np.pi, -2*np.pi, -2*np.pi]),
                         high =np.array([2*np.pi, 2*np.pi, 2*np.pi,2*np.pi, 2*np.pi, 2*np.pi]),
                         dtype = float
-                    ),
-                #"stepnumber": spaces.Box(low = 0 , high = 500, dtype= int),
-                "d_goal": spaces.Box(0,2,dtype=float),
-                "dr_goal": spaces.Box(0,2*np.pi,dtype=float),
+                    )#,
+                # "d_goal": spaces.Box(0,2,dtype=float),
+                # "dr_goal": spaces.Box(0,2*np.pi,dtype=float),
                                                    
             }
         )
@@ -81,9 +83,9 @@ class WeBot_environment(Env):
             "q_goal": self.q_goal, 
             "p_ee": p_ee,
             "q_ee": q_ee, 
-            "theta": self.theta, 
-            "d_goal": self.dist,
-            "dr_goal": self.rot_dist 
+            "theta": self.theta#, 
+            # "d_goal": self.dist,
+            # "dr_goal": self.rot_dist 
         }
         
         return observation
@@ -160,8 +162,8 @@ class WeBot_environment(Env):
         rand_z = np.random.uniform(0.05,0.4)    
         self.goal = np.array([rand_x,rand_y,rand_z])
         
-        #R_goal = [[0,-1,0], [-1,0,0], [0,0,-1]]
-        R_goal = self.random_goal()
+        R_goal = [[0,-1,0], [-1,0,0], [0,0,-1]]
+        #R_goal = self.random_goal()
         
         self.q_goal =  R.from_matrix(R_goal).as_quat()
         FW.show_goal(self.goal, self.q_goal)

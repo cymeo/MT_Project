@@ -6,7 +6,6 @@ import time
 # Initialize Webots Supervisor
 robot = Supervisor()
 timestep = int(robot.getBasicTimeStep())
-print ("timestep", timestep)
 # Get reference to the arm node
 arm = robot.getFromDef("Arm")
 
@@ -33,17 +32,17 @@ time_min, time_max = 1500,2500  #milisec
 
 current_time = 0 
 total_time = random.uniform(time_min,time_max)
+pausetime = random.uniform(1500,3000)
 
 start_position= np.array([random.uniform(xs_min, xs_max), random.uniform(ys_min, ys_max), random.uniform(zs_min, zs_max) ])
 end_position = np.array([random.uniform(x_min, x_max), random.uniform(y_min, y_max), random.uniform(z_min, z_max) ])  
 
 to_start = -1
 to_goal = 1
-
+ 
 while robot.step(timestep) != -1:
-    
+
     current_time += timestep    
-    
     t = current_time/ total_time
     t = min(max(t, 0), 1)  # Ensure t stays between 0 and 1
     
@@ -60,22 +59,29 @@ while robot.step(timestep) != -1:
     
     # reach goal_position, wait for max 3 sec and go to new start/endpos 
     if (np.linalg.norm(new_position-end_position)<= 0.01): 
-        to_goal = to_goal* -1 
-        to_start = to_start * -1  
-        time.sleep(random.uniform(0.5,3))
         
-        current_time = 0 
-        total_time = random.uniform(time_min,time_max)
+        if current_time > (pausetime + total_time):
 
-        if to_goal == 1 : 
-            start_position = end_position
-            end_position = np.array([random.uniform(x_min, x_max), random.uniform(y_min, y_max), random.uniform(z_min, z_max) ])       
+            to_goal = to_goal* -1 
+            to_start = to_start * -1  
+
+            # set timer for position calculation
+            current_time = 0 
+            total_time = random.uniform(time_min,time_max)
+            pausetime = random.uniform(1500,3000)
+            
+            if to_goal == 1 : 
+                start_position = end_position
+                end_position = np.array([random.uniform(x_min, x_max), random.uniform(y_min, y_max), random.uniform(z_min, z_max) ])       
+            
+            if to_start == 1 :
+                start_position = end_position
+                end_position = np.array([random.uniform(xs_min, xs_max), random.uniform(ys_min, ys_max), random.uniform(zs_min, zs_max) ])
         
-        if to_start == 1 :
-            start_position = end_position
-            end_position = np.array([random.uniform(xs_min, xs_max), random.uniform(ys_min, ys_max), random.uniform(zs_min, zs_max) ])
-        print("start",start_position)
-        print("end", end_position)
+        else: 
+            continue
+
     
+                
         
 
