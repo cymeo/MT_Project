@@ -127,7 +127,7 @@ def show_goal(position, quat):
     # Convert quaternion to axis-angle (Webots format)
     angle = 2 * np.arccos(quat[3])
     axis = quat[:3] / np.linalg.norm(quat[:3])
-    rot = tip.getField("rotation")
+    rot = box.getField("rotation")
     rot.setSFRotation([axis[0], axis[1], axis[2], angle])
     pass
     

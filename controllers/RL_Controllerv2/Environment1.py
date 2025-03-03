@@ -49,7 +49,7 @@ class WeBot_environment(Env):
                     ),
                 #"stepnumber": spaces.Box(low = 0 , high = 500, dtype= int),
                 "d_goal": spaces.Box(0,2,dtype=float),
-                "dr_goal": spaces.Box(0,np.pi,dtype=float),
+                "dr_goal": spaces.Box(0,2*np.pi,dtype=float),
                                                    
             }
         )
@@ -73,15 +73,14 @@ class WeBot_environment(Env):
         pose_ee = FW.get_forward_kinematics(self.theta)
         p_ee = np.array(pose_ee[:3,3])
         rot= R.from_matrix(pose_ee[:3,:3])
-        rot_quat= np.array(rot.as_quat())
-        #print("goal", self.goal,"p_ee", p_ee)
-        self.dist, self.rot_dist = self.get_distance(self.goal, p_ee, rot)
+        q_ee= np.array(rot.as_quat())
+        self.dist, self.rot_dist = self.get_distance(self.goal,self.q_goal, p_ee, q_ee)
         
         observation = { 
             "goal": self.goal,
             "q_goal": self.q_goal, 
             "p_ee": p_ee,
-            "q_ee":rot_quat, 
+            "q_ee": q_ee, 
             "theta": self.theta, 
             "d_goal": self.dist,
             "dr_goal": self.rot_dist 
@@ -89,16 +88,16 @@ class WeBot_environment(Env):
         
         return observation
 
-    def get_distance(self, goal, p_ee, rot_ee):
-        dist = np.linalg.norm(goal - p_ee)
-        goal_rot = np.array([0,-1,0])
-        ee_rot_quat = rot_ee #R.from_quat(rot_ee)
-        ee_rot= ee_rot_quat.as_matrix()
+    def get_distance(self, p_goal,q_goal,  p_ee, q_ee):
+        dist = np.linalg.norm(p_goal - p_ee)
+        #goal_rot = np.array([0,-1,0])
+        
+        rot_goal = R.from_quat(q_goal)
+        rot_ee = R.from_quat(q_ee)
+        rot_diff = rot_goal.inv() * rot_ee
+        rot_dist = 2*np.arccos(np.clip(rot_diff.as_quat()[-1], -1.0, 1.0))/(2*np.pi)   # normed to 1 
         #rot_dist = np.arccos((np.trace(np.dot(goal_rot.T,ee_rot))-1)/2)
          #Compute the cosine similarity (dot product)
-        z_axis = ee_rot[:, 2]  # Assuming 3x3 rotation matrix
-        z_down = np.array([0,0,-1])  # downward direction for  
-        rot_dist = np.dot(z_axis, z_down) / (np.linalg.norm(z_axis) * np.linalg.norm(z_down))
         return np.array([dist]), np.array([np.absolute(rot_dist)])
         
     def get_reward(self): 
@@ -136,7 +135,6 @@ class WeBot_environment(Env):
          
     def step(self, action):
         
-        #print("action",action)
         self.current_step += 1 
         #self.theta = FW.get_motor_pos()
         new_theta = np.clip(action, -np.pi/2, np.pi/2)
@@ -147,7 +145,6 @@ class WeBot_environment(Env):
 
         truncated = False
         info = {}
-        #print("reward",reward)
 
         return observation, reward, self.done, truncated, info
 
@@ -162,9 +159,11 @@ class WeBot_environment(Env):
         rand_y = np.random.uniform(-0.5, 0.5)
         rand_z = np.random.uniform(0.05,0.4)    
         self.goal = np.array([rand_x,rand_y,rand_z])
-        R_zdown = [[0,-1,0], [-1,0,0], [0,0,-1]]
-        self.q_goal =  R.from_matrix(R_zdown).as_quat()
-         
+        
+        #R_goal = [[0,-1,0], [-1,0,0], [0,0,-1]]
+        R_goal = self.random_goal()
+        
+        self.q_goal =  R.from_matrix(R_goal).as_quat()
         FW.show_goal(self.goal, self.q_goal)
             
         # reset parameters    
@@ -172,7 +171,6 @@ class WeBot_environment(Env):
         self.done = False 
         self.current_step = 0
         observation = self.get_observation()
-        #print("obs: " ,observation)
         info = {}
         
         return observation, info
@@ -182,3 +180,25 @@ class WeBot_environment(Env):
 
     def close(self):
         pass
+    
+    def random_goal(self):
+
+    # Random yaw (rotation around Z), allowing full 360-degree rotation
+        yaw = np.random.uniform(0, 2 * np.pi)
+
+        # Small random tilts around X and Y
+        tilt_x = np.random.uniform(-np.pi/2, np.pi/2)
+        tilt_y = np.random.uniform(-np.pi/2, np.pi/2)
+
+        # Step 1: Start with a base rotation where Z is fully down, X is forward
+        base_rotation = R.from_euler('y', 180, degrees=True)  # Rotates Z downward
+
+        # Step 2: Apply small tilt around X and Y
+        tilt_rotation = R.from_euler('xy', [tilt_x, tilt_y], degrees=False)
+
+        # Step 3: Apply random yaw rotation around Z-axis
+        yaw_rotation = R.from_euler('z', yaw, degrees=False)
+
+        # Compute the final rotation matrix
+        final_rotation = yaw_rotation * tilt_rotation * base_rotation
+        return final_rotation.as_matrix()

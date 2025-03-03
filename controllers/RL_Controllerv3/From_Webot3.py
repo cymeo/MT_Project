@@ -117,8 +117,6 @@ def reset_sim():
     [motor.setVelocity(0) for motor in motors]
 
     supervisor.step(int(supervisor.getBasicTimeStep()))
-    
-
     pass
 
 def show_goal(position, quat):

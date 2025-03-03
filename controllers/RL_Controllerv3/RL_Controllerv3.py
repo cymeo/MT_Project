@@ -1,7 +1,7 @@
-from Environment1 import WeBot_environment as W_Env
+from controllers.RL_Controllerv3.Environment3 import WeBot_environment3 as W_Env
 import torch
-print(torch.cuda.is_available())  # Should return True if GPU is available
-print(torch.cuda.get_device_name(0))  # Show GPU name if available
+# print(torch.cuda.is_available())  # Should return True if GPU is available
+# print(torch.cuda.get_device_name(0))  # Show GPU name if available
 
 # for training
 from stable_baselines3 import PPO   
@@ -16,11 +16,10 @@ env = W_Env()
 check_env(env, warn = False)
 print("environment checked")
 
-env = Monitor(env, filename=f"monitor_logs/env02") 
+env = Monitor(env, filename=f"monitor_logs/env02_4") 
 env = DummyVecEnv([lambda: env])
 
-
-# model = PPO.load('./models/ppo2_1')
+# model = PPO.load('models/ppo2_4_2500000_steps')
 # model.set_env(env)  # Set environment
 
 model = PPO(
@@ -33,13 +32,13 @@ model = PPO(
     )
 
 print("model loaded")
+
 obs = env.reset()
-steps = 30
+steps = 25
 episodes = 100000
 
-checkpoint_callback = CheckpointCallback(save_freq=episodes, save_path="./models/", name_prefix="ppo2_2")
-
-model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log2_2", callback=checkpoint_callback)   
+checkpoint_callback = CheckpointCallback(save_freq= steps/5*episodes, save_path="./models/", name_prefix="ppo2_4")
+model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log2_4", callback=checkpoint_callback)   
 
 
 print('start test')
@@ -67,5 +66,4 @@ DF = pd.DataFrame({
     "success": successed,
     "steps":np.array(steps_per_Episodes)
     })
-DF.to_csv("test_results4")
 

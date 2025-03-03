@@ -17,7 +17,6 @@ def plot_monitor_data(file_path):
     # Create the subplots
     fig, axs = plt.subplots(2, 2, figsize=(10, 8), sharex=True)
 
-
     # filter for rewards
     y_rewards_f = uniform_filter1d(rewards,300)
     # Plot rewards
@@ -48,7 +47,7 @@ def plot_monitor_data(file_path):
     crash_count = np.convolve(rewards>=5, np.ones(window_size, dtype=int), mode='same')
     success_count = np.convolve((0 < rewards) & (rewards < 5), np.ones(window_size, dtype=int), mode='same')
     overstepped_count = np.convolve(rewards < 0, np.ones(window_size, dtype=int), mode='same')    
-    axs[0,1].stackplot(epochs,success_count,overstepped_count,crash_count,labels=['Success', 'Fail','rot_success' ], colors = ['lightgreen','lightpink','lightyellow'])
+    axs[0,1].stackplot(epochs,success_count,overstepped_count,crash_count,labels=['Success', 'Fail','rot_success' ], colors = ['lightyellow','lightpink','lightgreen'])
     axs[0, 1].set_title('crashes & successes per 100 epochs')
     axs[0, 1].set_xlabel('Epochs')
     axs[0, 1].set_ylabel('Percentage %')
@@ -71,15 +70,7 @@ def plot_monitor_data(file_path):
     print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
-plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controllerv2/monitor_logs/env02.monitor.csv')
-
-
-
-
-
-
-
-
+plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controllerv2/monitor_logs/env02_4.monitor.csv')
 
 
 

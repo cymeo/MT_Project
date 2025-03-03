@@ -16,10 +16,10 @@ env = W_Env()
 check_env(env, warn = False)
 print("environment checked")
 
-env = Monitor(env, filename=f"monitor_logs/env02_4") 
+env = Monitor(env, filename=f"monitor_logs/env02_5") 
 env = DummyVecEnv([lambda: env])
 
-# model = PPO.load('models/ppo2_4_2500000_steps')
+# model = PPO.load('models/ppo2_4_facing_down.zip')
 # model.set_env(env)  # Set environment
 
 model = PPO(
@@ -37,8 +37,8 @@ obs = env.reset()
 steps = 25
 episodes = 100000
 
-checkpoint_callback = CheckpointCallback(save_freq= steps/5*episodes, save_path="./models/", name_prefix="ppo2_4")
-model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log2_4", callback=checkpoint_callback)   
+checkpoint_callback = CheckpointCallback(save_freq= steps/5*episodes, save_path="./models/", name_prefix="ppo2_5")
+model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_log2_5", callback=checkpoint_callback)   
 
 
 print('start test')
@@ -58,6 +58,7 @@ for episode in range(100):
             break
         steps +=1
     obs = env.reset()
+    
     steps_per_Episodes.append(steps)
     print(steps, ' steps in episode ',episode)   
     

@@ -1,4 +1,4 @@
-import From_Webot1 as FW
+import controllers.RL_Controllerv3.From_Webot3 as FW
 from gymnasium import Env
 import numpy as np
 from gymnasium import spaces
@@ -9,7 +9,7 @@ class WeBot_environment(Env):
 
     def __init__(self):
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([0.1,0.04,5,50]) 
+        self.weights = np.array([0.1,0.03,5,50]) 
         self.max_step = 700
         super().__init__()
         # Define action and observation space
@@ -49,7 +49,7 @@ class WeBot_environment(Env):
                     ),
                 #"stepnumber": spaces.Box(low = 0 , high = 500, dtype= int),
                 "d_goal": spaces.Box(0,2,dtype=float),
-                "dr_goal": spaces.Box(0,np.pi,dtype=float),
+                "dr_goal": spaces.Box(0,2*np.pi,dtype=float),
                                                    
             }
         )
@@ -63,6 +63,8 @@ class WeBot_environment(Env):
         self.done = False
         self.theta_dot = np.zeros(6)
         self.q_goal = np.array([0,0,0,0]) 
+        
+        
     def get_observation(self):
         #### todos: 
         # get motor,angles theta
@@ -71,15 +73,15 @@ class WeBot_environment(Env):
         pose_ee = FW.get_forward_kinematics(self.theta)
         p_ee = np.array(pose_ee[:3,3])
         rot= R.from_matrix(pose_ee[:3,:3])
-        rot_quat= np.array(rot.as_quat())
+        q_ee= np.array(rot.as_quat())
         #print("goal", self.goal,"p_ee", p_ee)
-        self.dist, self.rot_dist = self.get_distance(self.goal, p_ee, rot)
+        self.dist, self.rot_dist = self.get_distance(self.goal,self.q_goal, p_ee, q_ee)
         
         observation = { 
             "goal": self.goal,
             "q_goal": self.q_goal, 
             "p_ee": p_ee,
-            "q_ee":rot_quat, 
+            "q_ee": q_ee, 
             "theta": self.theta, 
             "d_goal": self.dist,
             "dr_goal": self.rot_dist 
@@ -87,16 +89,16 @@ class WeBot_environment(Env):
         
         return observation
 
-    def get_distance(self, goal, p_ee, rot_ee):
-        dist = np.linalg.norm(goal - p_ee)
-        goal_rot = np.array([0,-1,0])
-        ee_rot_quat = rot_ee #R.from_quat(rot_ee)
-        ee_rot= ee_rot_quat.as_matrix()
+    def get_distance(self, p_goal,q_goal,  p_ee, q_ee):
+        dist = np.linalg.norm(p_goal - p_ee)
+        #goal_rot = np.array([0,-1,0])
+        
+        rot_goal = R.from_quat(q_goal)
+        rot_ee = R.from_quat(q_ee)
+        rot_diff = rot_goal.inv() * rot_ee
+        rot_dist = 2 * np.arccos(np.clip(rot_diff.as_quat()[-1], -1.0, 1.0))  # Angle in radians
         #rot_dist = np.arccos((np.trace(np.dot(goal_rot.T,ee_rot))-1)/2)
          #Compute the cosine similarity (dot product)
-        z_axis = ee_rot[:, 2]  # Assuming 3x3 rotation matrix
-        z_down = np.array([0,0,-1])  # downward direction for  
-        rot_dist = np.dot(z_axis, z_down) / (np.linalg.norm(z_axis) * np.linalg.norm(z_down))
         return np.array([dist]), np.array([np.absolute(rot_dist)])
         
     def get_reward(self): 
@@ -113,7 +115,7 @@ class WeBot_environment(Env):
             print("rot_dist",self.rot_dist)
             if self.rot_dist<= 0.01: 
                 print("rot success")
-                R_success += 1
+                R_success += 0.5
         # crashed
         if self.crashed: 
             print("crash")
@@ -160,7 +162,8 @@ class WeBot_environment(Env):
         rand_y = np.random.uniform(-0.5, 0.5)
         rand_z = np.random.uniform(0.05,0.4)    
         self.goal = np.array([rand_x,rand_y,rand_z])
-        self.q_goal =  R.from_euler('x', 180, degrees=True).as_quat()
+        R_zdown = [[0,-1,0], [-1,0,0], [0,0,-1]]
+        self.q_goal =  R.from_matrix(R_zdown).as_quat()
          
         FW.show_goal(self.goal, self.q_goal)
             
