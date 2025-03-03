@@ -50,6 +50,8 @@ class WeBot_environment(Env):
                 #"stepnumber": spaces.Box(low = 0 , high = 500, dtype= int),
                 "d_goal": spaces.Box(0,2,dtype=float),
                 "dr_goal": spaces.Box(0,2*np.pi,dtype=float),
+                "p_arm": spaces.Box(0,2,dtype=float),
+                "v_arm": spaces.Box(0,2,dtype=float),
                                                    
             }
         )
