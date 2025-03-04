@@ -156,5 +156,18 @@ def show_goal(position, quat):
     pass
     
 
+    
      
 
+def get_max_speed(): 
+    p_arm, v_arm = get_arm()
+    pose_ee = get_forward_kinematics()
+    p_ee = pose_ee[:3,3]
+    d_arm = np.linalg.norm(p_ee- p_arm)
+    
+    if d_arm >= 1: 
+        max_speed = []
+        
+    return max_speed
+        
+    

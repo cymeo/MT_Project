@@ -1,4 +1,4 @@
-import From_Webot3 as FW
+import From_Webot4 as FW
 from gymnasium import Env
 import numpy as np
 from gymnasium import spaces
@@ -135,7 +135,6 @@ class WeBot_environment(Env):
         
         # crashed
         if self.d_arm <= 0.1: 
-            print("near arm ")
             self.crashed = True 
         
         if self.crashed: 

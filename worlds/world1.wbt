@@ -8,7 +8,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.2141765656131888 -0.008274901666024638 0.9767599115159044 3.721513491561556
-  position 2.5670494890091606 1.7184781537216252 1.5169076996840716
+  position 2.0738947952737012 1.369739980838619 1.2620713244767847
 }
 TexturedBackground {
 }
@@ -18,9 +18,8 @@ RectangleArena {
   translation 0 0 -1.01
   floorSize 5 5
 }
-DEF Arm Solid {
-  translation 1.19784 0 0.507323
-  rotation 0 1 0 -2.094395307179586
+DEF Arm Robot {
+  translation 0.4 0 0
   children [
     Shape {
       appearance Appearance {
@@ -29,15 +28,18 @@ DEF Arm Solid {
         }
       }
       geometry Cylinder {
-        height 0.4
+        height 0.1
         radius 0.05
       }
     }
   ]
+  name "solid"
   boundingObject DEF arm Cylinder {
-    height 0.4
+    height 0.1
     radius 0.05
   }
+  controller "Arm_controller"
+  supervisor TRUE
 }
 DEF Tip Solid {
   translation 0.42 0 0.4
@@ -939,7 +941,7 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "RL_Controllerv2"
+  controller "RL_Controllerv3"
   supervisor TRUE
   selfCollision TRUE
 }

@@ -14,14 +14,14 @@ arm_translation = arm.getField("translation")
 
 
 #startbounds 
-xs_min, xs_max = 1, 1.5
-ys_min, ys_max = -0.7, 0.7
+xs_min, xs_max = 0.6, 0.8 
+ys_min, ys_max = -0.5, 0.5
 zs_min, zs_max = 0, 0.5
 
 # goal bounds
-x_min, x_max = 0.3, 0.5
-y_min, y_max = -0.5, 0.5
-z_min, z_max = 0, 0.2
+x_min, x_max = 0.3, 0.6
+y_min, y_max = -0.3, 0.3
+z_min, z_max = 0.05, 0.2
 
 # Speed constraints
 speed_min = 0.01  # Minimum movement speed
