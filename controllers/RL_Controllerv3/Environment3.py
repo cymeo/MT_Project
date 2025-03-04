@@ -122,6 +122,7 @@ class WeBot_environment(Env):
         R_crash = 0 
         R_dist= self.dist ## distance to goal
         R_rot_dist = self.rot_dist 
+        self.crashed = FW.check_crash()
 
         #successed
         if (self.dist <= 0.03):
@@ -129,7 +130,7 @@ class WeBot_environment(Env):
             print("successed, steps: ", self.current_step)
             self.done = True 
             print("rot_dist",self.rot_dist)
-            if self.rot_dist<= 0.01: 
+            if self.rot_dist<= 0.05: 
                 print("rot success")
                 R_success += 0.5
         
@@ -161,12 +162,7 @@ class WeBot_environment(Env):
         self.current_step += 1
         new_theta = np.clip(action, -3.13, 3.13)
         
-        
-        
-        
-        FW.move_robot(new_theta)
-        self.crashed = FW.check_crash()
-                
+        FW.move_robot(new_theta)                
         observation = self.get_observation()
         reward = self.get_reward()
 

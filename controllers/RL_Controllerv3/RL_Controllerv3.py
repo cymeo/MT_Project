@@ -19,17 +19,17 @@ print("environment checked")
 env = Monitor(env, filename=f"monitor_logs/env03") 
 env = DummyVecEnv([lambda: env])
 
-# model = PPO.load('models/ppo3_0_10000000_steps')
-# model.set_env(env)  # Set environment
+model = PPO.load('models/ppo3_0_4000000_steps')
+model.set_env(env)  # Set environment
 
-model = PPO(
-    policy = "MultiInputPolicy", 
-    env= env, 
-    device="cuda",
-    batch_size=1024,
-    learning_rate= 3e-4,  
-    n_steps= 2048,
-    )
+# model = PPO(
+#     policy = "MultiInputPolicy", 
+#     env= env, 
+#     device="cuda",
+#     batch_size=1024,
+#     learning_rate= 3e-4,  
+#     n_steps= 2048,
+#     )
 
 print("model loaded")
 

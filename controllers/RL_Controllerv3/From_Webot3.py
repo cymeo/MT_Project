@@ -118,13 +118,14 @@ def check_crash():
     crashed = False
 
     if contact_table:
+        print("table crash")
         crashed = True
-        #print("table crash")
+        
     if contact_arm: 
-        #print("arm crash")
+        print("arm crash")
         crashed = True
     if contact_robot: 
-        #print("robot crash")
+        print("robot crash")
         crashed = True    
     return crashed
     

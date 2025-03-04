@@ -47,7 +47,7 @@ def plot_monitor_data(file_path):
     crash_count = np.convolve(rewards>=5, np.ones(window_size, dtype=int), mode='same')
     success_count = np.convolve((0 < rewards) & (rewards < 5), np.ones(window_size, dtype=int), mode='same')
     overstepped_count = np.convolve(rewards < 0, np.ones(window_size, dtype=int), mode='same')    
-    axs[0,1].stackplot(epochs,success_count,overstepped_count,crash_count,labels=['Success', 'Fail','rot_success' ], colors = ['lightyellow','lightpink','lightgreen'])
+    axs[0,1].stackplot(epochs,success_count,crash_count,overstepped_count,labels=['Success','rot_success', 'Fail' ], colors = ['lightyellow','lightgreen','lightpink'])
     axs[0, 1].set_title('crashes & successes per 100 epochs')
     axs[0, 1].set_xlabel('Epochs')
     axs[0, 1].set_ylabel('Percentage %')
@@ -70,7 +70,7 @@ def plot_monitor_data(file_path):
     print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
-plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controllerv2/monitor_logs/env02_4.monitor.csv')
+plot_monitor_data('controllers/RL_Controllerv3/monitor_logs/env03.monitor.csv')
 
 
 
