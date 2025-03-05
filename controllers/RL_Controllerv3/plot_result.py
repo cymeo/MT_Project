@@ -27,7 +27,6 @@ def plot_monitor_data(file_path):
     axs[0, 0].legend(loc='upper left', bbox_to_anchor=(1, 1))
     axs[0, 0].grid()
 
-
     # filter for episode lengths
     X = epochs.reshape(-1, 1)  # Reshape for sklearn
     y_epF = uniform_filter1d(steps,300)
@@ -70,7 +69,7 @@ def plot_monitor_data(file_path):
     print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
-plot_monitor_data('controllers/RL_Controllerv3/monitor_logs/env03.monitor.csv')
+plot_monitor_data('controllers/RL_Controllerv3/monitor_logs/env03_1.monitor.csv')
 
 
 

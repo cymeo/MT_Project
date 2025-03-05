@@ -155,7 +155,6 @@ def show_goal(position, quat):
     rot.setSFRotation([axis[0], axis[1], axis[2], angle])
     pass
 
-
 def get_max_speed(): 
     global robot_model
     p_arm, v_arm = get_arm()

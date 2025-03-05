@@ -158,12 +158,14 @@ class WeBot_environment(Env):
     def step(self, action):
         
         self.current_step += 1
-        new_theta = np.clip(action, -3.13, 3.13)
         
+        new_thetas = np.clip(action, -3.13, 3.13)
+        max_sp, min_sp = FW.get_max_speed()
         
+        for i, new_theta in enumerate(new_thetas):
+            new_theta = np.clip(new_theta, min = min_sp[i], max=max_sp[i] )       
         
-        
-        FW.move_robot(new_theta)
+        FW.move_robot(new_thetas)
         self.crashed = FW.check_crash()
                 
         observation = self.get_observation()

@@ -25,7 +25,7 @@ RectangleArena {
   }
 }
 DEF Arm Robot {
-  translation 0.52 0 0.04
+  translation 0.31 0 0.04
   children [
     Shape {
       appearance Appearance {
@@ -44,7 +44,7 @@ DEF Arm Robot {
     height 0.1
     radius 0.05
   }
-  controller "Arm_controller"
+  controller "<none>"
   supervisor TRUE
 }
 DEF Tip Solid {
@@ -320,8 +320,8 @@ DEF Robot Robot {
               }
             ]
             endPoint Solid {
-              translation -3.465390194280579e-18 0.13799999999999996 2.775608240918146e-17
-              rotation 3.132880631266492e-16 1 8.593054617270499e-12 1.6153738483572046e-05
+              translation -3.4653901942803263e-18 0.13799999999999996 2.775608240916498e-17
+              rotation 3.132880952124891e-16 1 8.593055495906683e-12 1.6153738483572046e-05
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -552,8 +552,8 @@ DEF Robot Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 1.9984000842921424e-15 -3.191891195825459e-16 0.3919999999999992
-                          rotation -4.1365151311575917e-10 1 -5.8364193654409e-11 6.542950391799285e-07
+                          translation 1.9984000842921424e-15 -3.1918911958329757e-16 0.3919999999999992
+                          rotation -4.1365164060196314e-10 1 -5.836421164209869e-11 6.542950391799285e-07
                           children [
                             Shape {
                               appearance USE METAL_APPEARANCE
@@ -948,7 +948,7 @@ DEF Robot Robot {
       }
     ]
   }
-  controller "RL_Controllerv3"
+  controller "velocity_control"
   supervisor TRUE
   selfCollision TRUE
 }
