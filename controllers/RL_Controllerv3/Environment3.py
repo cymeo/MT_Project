@@ -125,7 +125,7 @@ class WeBot_environment(Env):
         self.crashed = FW.check_crash()
 
         #successed
-        if (self.dist <= 0.03):
+        if (self.dist <= 0.01):
             R_success = 1 
             print("successed, steps: ", self.current_step)
             self.done = True 
@@ -138,6 +138,7 @@ class WeBot_environment(Env):
         if self.d_arm <= 0.1: 
             print("near arm ")
             self.crashed = True 
+            R_crash = 5 
         
         if self.crashed: 
             print("crash")
@@ -179,9 +180,9 @@ class WeBot_environment(Env):
         self.theta, self.theta_dot = FW.get_motor_pos()
         
         # new goal_pos
-        rand_x = np.random.uniform(0.3, 0.6) 
-        rand_y = np.random.uniform(-0.5, 0.5)
-        rand_z = np.random.uniform(0.05,0.4)    
+        rand_x = np.random.uniform(0.2, 0.6) 
+        rand_y = np.random.uniform(-0.45, 0.45)
+        rand_z = np.random.uniform(0.05,0.3)    
         self.goal = np.array([rand_x,rand_y,rand_z])
         R_zdown = [[0,-1,0], [-1,0,0], [0,0,-1]]
         self.q_goal =  R.from_matrix(R_zdown).as_quat()

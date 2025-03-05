@@ -3,12 +3,13 @@
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/BrushedAluminium.proto"
 
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.2141765656131888 -0.008274901666024638 0.9767599115159044 3.721513491561556
-  position 2.0738947952737012 1.369739980838619 1.2620713244767847
+  orientation -0.24365429937003832 -0.03953447189739189 0.9690560396232458 3.9052311615716935
+  position 1.7738431665276766 1.4617767372482353 1.1496099973416682
 }
 TexturedBackground {
 }
@@ -17,9 +18,14 @@ TexturedBackgroundLight {
 RectangleArena {
   translation 0 0 -1.01
   floorSize 5 5
+  floorTileSize 1 1
+  wallHeight 1.5
+  wallAppearance BrushedAluminium {
+    IBLStrength 11
+  }
 }
 DEF Arm Robot {
-  translation 0.4 0 0
+  translation 0.52 0 0.04
   children [
     Shape {
       appearance Appearance {
@@ -42,7 +48,7 @@ DEF Arm Robot {
   supervisor TRUE
 }
 DEF Tip Solid {
-  translation 0.42 0 0.4
+  translation 0.49 0.13 0.4
   children [
     Shape {
       appearance Appearance {
@@ -61,13 +67,14 @@ DEF Tip Solid {
   name "solid(1)"
 }
 DEF Table Solid {
-  translation 0.3 0 -0.57
+  translation 0.3 0 -0.5
   children [
     Shape {
       appearance Appearance {
         material Material {
-          diffuseColor 0.5 0.5 0.5
-          transparency 0.71
+          ambientIntensity 0.9
+          diffuseColor 0.8 0.7 0.7
+          shininess 0
         }
       }
       geometry Box {
@@ -81,7 +88,7 @@ DEF Table Solid {
   }
 }
 DEF Box Solid {
-  translation 0.68 0 0
+  translation 0.68 0 0.03
   children [
     Shape {
       appearance Appearance {
@@ -313,8 +320,8 @@ DEF Robot Robot {
               }
             ]
             endPoint Solid {
-              translation 0 0.138 0
-              rotation 0 1 0 1.61544532446799e-05
+              translation -3.465390194280579e-18 0.13799999999999996 2.775608240918146e-17
+              rotation 3.132880631266492e-16 1 8.593054617270499e-12 1.6153738483572046e-05
               children [
                 Shape {
                   appearance PBRAppearance {
@@ -545,8 +552,8 @@ DEF Robot Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 0 0 0.392
-                          rotation 0 1 0 7.77149487161957e-07
+                          translation 1.9984000842921424e-15 -3.191891195825459e-16 0.3919999999999992
+                          rotation -4.1365151311575917e-10 1 -5.8364193654409e-11 6.542950391799285e-07
                           children [
                             Shape {
                               appearance USE METAL_APPEARANCE
