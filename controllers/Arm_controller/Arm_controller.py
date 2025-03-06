@@ -39,8 +39,14 @@ end_position = np.array([random.uniform(x_min, x_max), random.uniform(y_min, y_m
 
 to_start = -1
 to_goal = 1
- 
+
+arm_pos_prev = np.array(arm_translation.getSFVec3f())
+arm_pos_cur = np.array(arm_translation.getSFVec3f())
 while robot.step(timestep) != -1:
+    arm_pos_cur = np.array(arm_translation.getSFVec3f())
+    v_arm = np.linalg.norm(arm_pos_cur-arm_pos_prev)/timestep*1000
+    arm_pos_prev = arm_pos_cur
+    #print("Varm ", v_arm)
 
     current_time += timestep    
     t = current_time/ total_time

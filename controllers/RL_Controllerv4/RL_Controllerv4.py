@@ -16,7 +16,7 @@ env = W_Env()
 check_env(env, warn = False)
 print("environment checked")
 
-env = Monitor(env, filename=f"monitor_logs/env03") 
+env = Monitor(env, filename=f"monitor_logs/env03_1") 
 env = DummyVecEnv([lambda: env])
 
 # model = PPO.load('models/ppo3_0_10000000_steps')

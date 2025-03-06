@@ -18,7 +18,7 @@ class WeBot_environment(Env):
         super().__init__()
         # Define action and observation space
         #action = Motorangle steps  
-        self.action_space = spaces.Box(low= -0.5*np.pi, high = 0.5*np.pi, shape = (6,))
+        self.action_space = spaces.Box(low= -np.pi, high = np.pi, shape = (6,))
         #observation = Endeffector pose, motor angles, Goal Pose, 
         self.reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
         self.observation_space = spaces.Dict(
@@ -131,7 +131,7 @@ class WeBot_environment(Env):
         #print("action",action)
         self.current_step += 1 
         #self.theta = FW.get_motor_pos()
-        new_theta = np.clip(action, -np.pi/2, np.pi/2)
+        new_theta = np.clip(action, -3.13,3.13)
         FW.move_robot(new_theta)
         self.crashed = FW.check_crash()        
         observation = self.get_observation()

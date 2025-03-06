@@ -77,7 +77,7 @@ class WeBot_environment(Env):
         self.theta_dot = np.zeros(6)
         self.q_goal = np.array([0,0,0,0]) 
         
-        
+                
     def get_observation(self):
         #### todos: 
         # get motor,angles theta
@@ -115,12 +115,12 @@ class WeBot_environment(Env):
             "d_arm": self.d_arm
         }
         return observation
-
+        
         
     def get_reward(self): 
         R_success = 0 
         R_crash = 0 
-        R_dist= self.dist ## distance to goal
+        R_dist= self.dist + np.tanh(self.dist/0.1)   ## distance to goal
         R_rot_dist = self.rot_dist 
 
         #successed
@@ -153,7 +153,7 @@ class WeBot_environment(Env):
             self.weights[2]*R_success + 
             -self.weights[3]*R_crash)     
         return total_reward[0]
-
+        
          
     def step(self, action):
         
@@ -175,6 +175,7 @@ class WeBot_environment(Env):
         info = {}
         
         return observation, reward, self.done, truncated, info
+
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)        
@@ -201,8 +202,10 @@ class WeBot_environment(Env):
         
         return observation, info
 
+
     def render(self):
         pass
+
 
     def close(self):
         pass

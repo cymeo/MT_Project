@@ -158,26 +158,26 @@ def show_goal(position, quat):
 def get_max_speed(): 
     global robot_model
     p_arm, v_arm = get_arm()
-    theta, theta_dot = get_motor_pos
-    pose_ee = get_forward_kinematics()
+    theta, _ = get_motor_pos()
+    pose_ee = get_forward_kinematics(theta)
     p_ee = pose_ee[:3,3]
     d_arm = np.linalg.norm(p_ee- p_arm)
     
-    if d_arm >= 1: 
-        max_speed = [3.13,3.13,3.13,3.13,3.13,3.13]
-        min_speed = [-3.13,-3.13,-3.13,-3.13,-3.13,-3.13]
-    else: 
+
+    max_speed = [3.13,3.13,3.13,3.13,3.13,3.13]
+    min_speed = [-3.13,-3.13,-3.13,-3.13,-3.13,-3.13]
+    if d_arm <= 1: 
         # direction from endeffector to arm 
         dir_arm = [(p_arm[i]-p_ee[i])/np.linalg.norm(p_arm-p_ee) for i in range (3)]
         # velocity of arm towards endeffector 
         v_arm2ee =  np.dot(v_arm, ((p_ee -p_arm)/np.linalg.norm(p_ee-p_arm)))
         # maximal allowed speed for endeffector
-        speed_m = (d_arm-0.1 - np.linalg.norm(v_arm2ee)*0.7) / 0.3
-        print(speed_m)
+        #print("v_arm2ee", v_arm2ee)
+        speed_m = (d_arm -0.2 )/3 #- np.linalg.norm(v_arm2ee)*0.7) / 0.3
+        #print("max speed", speed_m)
         if speed_m <=0:
-             speed_m = 0      
-        #transferred to maximal velocity towards the arm position      
-        max_ee_vel = dir_arm*speed_m
+            speed_m = 0         #transferred to maximal velocity towards the arm position      
+        max_ee_vel = np.array(dir_arm)*speed_m
         
         # inversed kinematics/ jacobians to transfer to motor velocities 
         ee_id = robot_model.getFrameId("flange")
@@ -197,5 +197,4 @@ def get_max_speed():
                 min_speed[i] = -3.13
         
     return max_speed, min_speed
-        
     

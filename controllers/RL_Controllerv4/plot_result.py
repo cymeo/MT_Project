@@ -70,7 +70,7 @@ def plot_monitor_data(file_path):
     print("average stepnumber", np.sum(steps)/epochs[-1])
 
 # Example usage
-plot_monitor_data('/home/cecily/MasterThesis_Cy/MT_Project/controllers/RL_Controllerv2/monitor_logs/env02_4.monitor.csv')
+plot_monitor_data('controllers/RL_Controllerv4/monitor_logs/env03_1.monitor.csv')
 
 
 
