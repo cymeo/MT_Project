@@ -120,7 +120,8 @@ class WeBot_environment(Env):
     def get_reward(self): 
         R_success = 0 
         R_crash = 0 
-        R_dist= self.dist + np.tanh(self.dist/0.1)   ## distance to goal
+        R_dist= self.dist + 0.2*np.tanh(self.dist/0.05)
+  ## distance to goal
         R_rot_dist = self.rot_dist 
 
         #successed
