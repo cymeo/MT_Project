@@ -183,7 +183,7 @@ def get_max_speed():
         ee_id = robot_model.getFrameId("flange")
         J = pin.computeFrameJacobian(robot_model, robot_data, theta, ee_id, pin.ReferenceFrame.LOCAL_WORLD_ALIGNED)
         max_theta_dot = np.linalg.pinv(J[:3,:]) @ max_ee_vel
-        max_theta_dot= np.clip(max_theta_dot, min= -3.13, max = 3.13)
+        max_theta_dot= np.clip(max_theta_dot,-3.13, 3.13)
         
         for i, theta_constr in enumerate (max_theta_dot): 
             if np.sign(theta_constr) == 0 : 
@@ -195,6 +195,6 @@ def get_max_speed():
             elif np.sign(theta_constr) >0: 
                 max_speed[i] = theta_constr
                 min_speed[i] = -3.13
-        
+
     return max_speed, min_speed
     

@@ -164,7 +164,7 @@ class WeBot_environment(Env):
         max_sp, min_sp = FW.get_max_speed()
         
         for i, new_theta in enumerate(new_thetas):
-            new_theta = np.clip(new_theta, min = min_sp[i], max=max_sp[i] )       
+            new_theta = np.clip(new_theta, min_sp[i], max_sp[i] )       
         
         FW.move_robot(new_thetas)
         self.crashed = FW.check_crash()
