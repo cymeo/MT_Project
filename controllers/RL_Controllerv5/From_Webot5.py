@@ -118,9 +118,8 @@ def check_crash():
     crashed = False
 
     if contact_table:
-        #print("table crash")
         crashed = True
-        
+        #print("table crash")
     if contact_arm: 
         #print("arm crash")
         crashed = True
@@ -155,7 +154,47 @@ def show_goal(position, quat):
     rot = tip.getField("rotation")
     rot.setSFRotation([axis[0], axis[1], axis[2], angle])
     pass
+
+def get_max_speed(): 
+    global robot_model
+    p_arm, v_arm = get_arm()
+    theta, _ = get_motor_pos()
+    pose_ee = get_forward_kinematics(theta)
+    p_ee = pose_ee[:3,3]
+    d_arm = np.linalg.norm(p_ee- p_arm)
     
 
-     
+    max_speed = [3.13,3.13,3.13,3.13,3.13,3.13]
+    min_speed = [-3.13,-3.13,-3.13,-3.13,-3.13,-3.13]
+    if d_arm <= 1: 
+        # direction from endeffector to arm 
+        dir_arm = [(p_arm[i]-p_ee[i])/np.linalg.norm(p_arm-p_ee) for i in range (3)]
+        # velocity of arm towards endeffector 
+        v_arm2ee =  np.dot(v_arm, ((p_ee -p_arm)/np.linalg.norm(p_ee-p_arm)))
+        # maximal allowed speed for endeffector
+        #print("v_arm2ee", v_arm2ee)
+        speed_m = (d_arm -0.2 )/3 #- np.linalg.norm(v_arm2ee)*0.7) / 0.3
+        #print("max speed", speed_m)
+        if speed_m <=0:
+            speed_m = 0         #transferred to maximal velocity towards the arm position      
+        max_ee_vel = np.array(dir_arm)*speed_m
+        
+        # inversed kinematics/ jacobians to transfer to motor velocities 
+        ee_id = robot_model.getFrameId("flange")
+        J = pin.computeFrameJacobian(robot_model, robot_data, theta, ee_id, pin.ReferenceFrame.LOCAL_WORLD_ALIGNED)
+        max_theta_dot = np.linalg.pinv(J[:3,:]) @ max_ee_vel
+        max_theta_dot= np.clip(max_theta_dot,-3.13, 3.13)
+        
+        for i, theta_constr in enumerate (max_theta_dot): 
+            if np.sign(theta_constr) == 0 : 
+                max_speed[i] = 0
+                min_speed[i] = 0 
+            elif np.sign(theta_constr) <0: 
+                max_speed[i] = 3.13
+                min_speed[i] = theta_constr
+            elif np.sign(theta_constr) >0: 
+                max_speed[i] = theta_constr
+                min_speed[i] = -3.13
 
+    return max_speed, min_speed
+    

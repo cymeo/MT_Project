@@ -1,4 +1,4 @@
-import From_Webot3 as FW
+import From_Webot5 as FW
 from gymnasium import Env
 import numpy as np
 from gymnasium import spaces
@@ -11,8 +11,8 @@ class WeBot_environment(Env):
 
     def __init__(self):
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([0.1,0.0,5,200]) 
-        self.max_step = 1000
+        self.weights = np.array([0.1, 0.0, 10, 100, 0.1]) 
+        self.max_step = 1500
         super().__init__()
         # Define action and observation space
         
@@ -77,7 +77,7 @@ class WeBot_environment(Env):
         self.theta_dot = np.zeros(6)
         self.q_goal = np.array([0,0,0,0]) 
         
-        
+                
     def get_observation(self):
         #### todos: 
         # get motor,angles theta
@@ -115,14 +115,19 @@ class WeBot_environment(Env):
             "d_arm": self.d_arm
         }
         return observation
-
+        
         
     def get_reward(self): 
         R_success = 0 
         R_crash = 0 
-        R_dist= self.dist ## distance to goal
+        R_dist= self.dist #+ 0.2*np.tanh(self.dist/0.05)
+        R_darm = 0 
+        ## distance to goal
         R_rot_dist = self.rot_dist 
-        self.crashed = FW.check_crash()
+        
+        ## penalise distance to arm 
+        if self.d_arm <= 0.2:
+            R_darm = 1/self.d_arm
 
         #successed
         if (self.dist <= 0.03):
@@ -130,15 +135,13 @@ class WeBot_environment(Env):
             print("successed, steps: ", self.current_step)
             self.done = True 
             print("rot_dist",self.rot_dist)
-            if self.rot_dist<= 0.05: 
+            if self.rot_dist<= 0.01: 
                 print("rot success")
                 R_success += 0.5
         
         # crashed
         if self.d_arm <= 0.1: 
-            #print("near arm ")
             self.crashed = True 
-            R_crash = 5 
         
         if self.crashed: 
             print("crash")
@@ -154,16 +157,24 @@ class WeBot_environment(Env):
         total_reward = (-self.weights[0]*R_dist + 
             -self.weights[1]*R_rot_dist + 
             self.weights[2]*R_success + 
-            -self.weights[3]*R_crash)     
+            -self.weights[3]*R_crash
+            - self.weights[4]*R_darm)     
         return total_reward[0]
-
+        
          
     def step(self, action):
         
         self.current_step += 1
-        new_theta = np.clip(action, -3.139, 3.139)
         
-        FW.move_robot(new_theta)                
+        new_thetas = np.clip(action, -3.13, 3.13)
+        max_sp, min_sp = FW.get_max_speed()
+        
+        for i, new_theta in enumerate(new_thetas):
+            new_theta = np.clip(new_theta, min_sp[i], max_sp[i] )       
+        
+        FW.move_robot(new_thetas)
+        self.crashed = FW.check_crash()
+                
         observation = self.get_observation()
         reward = self.get_reward()
 
@@ -171,6 +182,7 @@ class WeBot_environment(Env):
         info = {}
         
         return observation, reward, self.done, truncated, info
+
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)        
@@ -180,9 +192,9 @@ class WeBot_environment(Env):
         self.theta, self.theta_dot = FW.get_motor_pos()
         
         # new goal_pos
-        rand_x = np.random.uniform(0.2, 0.6) 
-        rand_y = np.random.uniform(-0.45, 0.45)
-        rand_z = np.random.uniform(0.05,0.3)    
+        rand_x = np.random.uniform(0.3, 0.6) 
+        rand_y = np.random.uniform(-0.5, 0.5)
+        rand_z = np.random.uniform(0.05,0.4)    
         self.goal = np.array([rand_x,rand_y,rand_z])
         R_zdown = [[0,-1,0], [-1,0,0], [0,0,-1]]
         self.q_goal =  R.from_matrix(R_zdown).as_quat()
@@ -197,8 +209,10 @@ class WeBot_environment(Env):
         
         return observation, info
 
+
     def render(self):
         pass
+
 
     def close(self):
         pass
