@@ -46,7 +46,7 @@ def plot_monitor_data(file_path):
     crash_count = np.convolve(rewards>=10, np.ones(window_size, dtype=int), mode='same')
     success_count = np.convolve((0 < rewards) & (rewards < 10), np.ones(window_size, dtype=int), mode='same')
     overstepped_count = np.convolve(rewards < 0, np.ones(window_size, dtype=int), mode='same')    
-    axs[0,1].stackplot(epochs,success_count,overstepped_count,crash_count,labels=['Success', 'Fail','rot_success' ], colors = ['lightyellow','lightpink','lightgreen'])
+    axs[0,1].stackplot(epochs,success_count,overstepped_count,labels=['Success', 'Fail' ], colors = ['lightgreen','lightpink'])
     axs[0, 1].set_title('crashes & successes per 100 epochs')
     axs[0, 1].set_xlabel('Epochs')
     axs[0, 1].set_ylabel('Percentage %')
