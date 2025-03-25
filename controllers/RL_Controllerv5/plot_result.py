@@ -20,7 +20,7 @@ def plot_monitor_data(file_path):
     # filter for rewards
     y_rewards_f = uniform_filter1d(rewards,300)
     # Plot rewards
-    axs[0, 0].scatter(epochs, rewards, label='Rewards', color='blue')
+    axs[0, 0].scatter(epochs, rewards, label='Rewards', color='blue', s= 5 )
     axs[0, 0].plot(epochs, y_rewards_f, label='Moving Average 300', color='red', linewidth=2)
     axs[0, 0].set_title('Rewards per Epoch')
     axs[0, 0].set_ylabel('Rewards')
@@ -32,7 +32,7 @@ def plot_monitor_data(file_path):
     y_epF = uniform_filter1d(steps,300)
 
     # Plot steps (episode lengths) with linear regression
-    axs[1, 0].scatter(epochs, steps, label='Steps', color='blue', alpha=0.7)
+    axs[1, 0].scatter(epochs, steps, label='Steps', color='blue', s = 5)
     axs[1, 0].plot(epochs, y_epF, label='moving Average  300 ', color='red', linewidth=2)
     axs[1, 0].set_title('Steps per Epoch')
     axs[1, 0].set_xlabel('Epochs')
@@ -55,7 +55,8 @@ def plot_monitor_data(file_path):
     
     filtered_steps = steps[rewards > 0]
     filtered_steps_average = uniform_filter1d(filtered_steps,300)
-    axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='number of steps', color='blue', alpha = 0.5)
+    axs[1, 1].scatter(epochs[:len(filtered_steps)], filtered_steps, label='number of steps', color='blue', s = 5)
+    
     axs[1, 1].plot(epochs[:len(filtered_steps)], filtered_steps_average, label='moving average 300', color='red', linewidth=2)
     axs[1, 1].set_title('Steps per successed Epoch')
     axs[1, 1].set_xlabel('Epochs')
