@@ -27,7 +27,6 @@ def plot_monitor_data(file_path):
     axs[0, 0].legend(loc='upper left', bbox_to_anchor=(1, 1))
     axs[0, 0].grid()
 
-
     # filter for episode lengths
     X = epochs.reshape(-1, 1)  # Reshape for sklearn
     y_epF = uniform_filter1d(steps,300)
