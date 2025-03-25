@@ -11,7 +11,7 @@ class WeBot_environment(Env):
 
     def __init__(self):
         ######### rewards for -distance to goal,-rotational_distance, success, -max_steps, crash ############
-        self.weights = np.array([0.1, 0.0, 10, 100, 0.1]) 
+        self.weights = np.array([0.1, 0.0, 10, 100, 0.01]) 
         self.max_step = 1500
         super().__init__()
         # Define action and observation space
@@ -126,7 +126,7 @@ class WeBot_environment(Env):
         R_rot_dist = self.rot_dist 
         
         ## penalise distance to arm 
-        if self.d_arm <= 0.2:
+        if self.d_arm <= 0.3:
             R_darm = 1/self.d_arm
 
         #successed
