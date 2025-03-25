@@ -39,12 +39,12 @@ robot = supervisor.getFromDef("Robot")
 
 while supervisor.step(timestep) != -1:
     
-    box_position = box0.getPosition()
-    box_rotation = box0.getOrientation() 
-    box_rotationMatrix = np.array(box_rotation).reshape(3, 3)
+    # box_position = box0.getPosition()
+    # box_rotation = box0.getOrientation() 
+    # box_rotationMatrix = np.array(box_rotation).reshape(3, 3)
 
-    #print("box_rotation: ", box_rotationMatrix)
-    r = R.from_matrix(box_rotationMatrix)
+    # #print("box_rotation: ", box_rotationMatrix)
+    # r = R.from_matrix(box_rotationMatrix)
       
    
     reset_pose = np.array([0,-np.pi/2, np.pi/2, -np.pi/2,-np.pi/2,0])
@@ -56,17 +56,17 @@ while supervisor.step(timestep) != -1:
     for n, motor in enumerate(motors):
         motor.setPosition(reset_pose[n])
         sensor = motor.getPositionSensor()
-        sensor.enable(timestep)
-        sensors[n] = sensor.getValue()
-        theta_dot[n] = motor.getVelocity()
+        # sensor.enable(timestep)
+        # sensors[n] = sensor.getValue()
+        # theta_dot[n] = motor.getVelocity()
     
-    pin.forwardKinematics(robot_model, robot_data, sensors, theta_dot)
-    pin.updateFramePlacements(robot_model, robot_data) 
-    ee_id = robot_model.getFrameId("tool0")  # Get end-effector
-    ee_pose = robot_data.oMf[ee_id].homogeneous
+    # pin.forwardKinematics(robot_model, robot_data, sensors, theta_dot)
+    # pin.updateFramePlacements(robot_model, robot_data) 
+    # ee_id = robot_model.getFrameId("tool0")  # Get end-effector
+    # ee_pose = robot_data.oMf[ee_id].homogeneous
     
     
     #print("sensors: ",sensors)
-    print('sensors:', sensors)
+    # print('sensors:', sensors)
 
-    print('robot pose', ee_pose)
+    # print('robot pose', ee_pose)

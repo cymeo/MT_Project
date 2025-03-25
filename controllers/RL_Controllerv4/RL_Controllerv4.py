@@ -16,31 +16,31 @@ env = W_Env()
 check_env(env, warn = False)
 print("environment checked")
 
-env = Monitor(env, filename=f"monitor_logs/env04_train") 
+env = Monitor(env, filename=f"monitor_logs/env04") 
 env = DummyVecEnv([lambda: env])
 
-# model = PPO.load('models/ppo3_learned96per')
-# model.set_env(env)  # Set environment
+model = PPO.load('models/ppo4_train_15000000_steps')
+model.set_env(env)  # Set environment
 
 
-model = PPO(
-    policy = "MultiInputPolicy", 
-    env= env, 
-    device="cuda",
-    batch_size=1024,
-    learning_rate= 3e-4,  
-    n_steps= 3072,
-    )
+# model = PPO(
+#     policy = "MultiInputPolicy", 
+#     env= env, 
+#     device="cuda",
+#     batch_size=1024,
+#     learning_rate= 3e-4,  
+#     n_steps= 3072,
+#     )
 
 
 print("model loaded")
 
 obs = env.reset()
-steps = 1000
-episodes = 15000
+# steps = 1000
+# episodes = 15000
 
-checkpoint_callback = CheckpointCallback(save_freq= steps/5*episodes, save_path="./models/", name_prefix="ppo4_train")
-model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_4", callback=checkpoint_callback)   
+# checkpoint_callback = CheckpointCallback(save_freq= steps/5*episodes, save_path="./models/", name_prefix="ppo4_train")
+# model.learn(total_timesteps= steps*episodes, tb_log_name= "PPO_4", callback=checkpoint_callback)   
 
 
 print('start test')
